@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>沔阳论坛网 - Mianyang BBS 2000 - 网友之家</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Retro Millennium Cursors */
+      :root {
+        /* Windows XP / 2000 Style Arrow - Fixed Syntax */
+        --cursor-default: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJkIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTUwJSIgaGVpZ2h0PSIxNTAlIj48ZmVPZmZzZXQgcmVzdWx0PSJvIiBpbj0iU291cmNlQWxwaGEiIGR4PSIxIiBkeT0iMSIvPjxmZUNvbG9yTWF0cml4IHJlc3VsdD0ibSIgaW49Im8iIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjQgMCIvPjxmZUJsZW5kIGluPSRTb3VyY2VHcmFwaGljIiBpbjI9Im0iIG1vZGU9Im5vcm1hbCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0xLDEgTDEsMTUuNSBMNC41LDEyIEw3LjUsMTggTDEwLDE3IEw3LDExIEwxMi41LDExIEwxLDEgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMSIgc3R5bGU9InNoYXBlLXJlbmRlcmluZzpjcmlzcEVkZ2VzO2ZpbHRlcjp1cmwoI2QpOyIvPjwvc3ZnPg==') 0 0, auto;
+        
+        /* Use URL Encoded SVG for safer parsing if Base64 fails */
+        --cursor-default-safe: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='shadow' x='0' y='0' width='150%25' height='150%25'%3E%3CfeOffset in='SourceAlpha' dx='1' dy='1' result='o'/%3E%3CfeColorMatrix in='o' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0'/%3E%3CfeBlend in='SourceGraphic' mode='normal'/%3E%3C/filter%3E%3Cpath d='M1,1 L1,15.5 L4.5,12 L7.5,18 L10,17 L7,11 L12.5,11 L1,1 Z' fill='white' stroke='black' stroke-width='1' style='filter:url(%23shadow);shape-rendering:crispEdges'/%3E%3C/svg%3E") 0 0, default;
+
+        /* Windows XP / 2000 Style Hand Pointer - Fixed Syntax */
+        --cursor-pointer-safe: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='shadow' x='0' y='0' width='150%25' height='150%25'%3E%3CfeOffset in='SourceAlpha' dx='1' dy='1' result='o'/%3E%3CfeColorMatrix in='o' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0'/%3E%3CfeBlend in='SourceGraphic' mode='normal'/%3E%3C/filter%3E%3Cpath d='M9.5,2.5 L9.5,10.5 L7.5,10.5 L5.5,12.5 L5.5,17.5 L13.5,17.5 L13.5,10.5 L14.5,10.5 L14.5,5.5 L13.5,5.5 L13.5,10.5 L12.5,10.5 L12.5,4.5 L11.5,4.5 L11.5,10.5 L10.5,10.5 L10.5,3.5 L9.5,3.5 Z' fill='white' stroke='black' stroke-width='1' style='filter:url(%23shadow);shape-rendering:crispEdges'/%3E%3C/svg%3E") 9 2, pointer;
+      }
+
+      html, body {
+        cursor: var(--cursor-default-safe);
+        height: 100%;
+        overflow: hidden; /* Important: Disable body scroll so IEFrame handles viewport */
+      }
+
+      body {
+        background-color: #87CEEB; /* Sky Blue base */
+        background-image: url('https://i.ibb.co/jZsb5V6L/yupp-generated-image-293314.png');
+        background-repeat: repeat;
+        font-family: "SimSun", "宋体", "Courier New", monospace;
+        font-size: 12px;
+        image-rendering: pixelated;
+        margin: 0;
+        padding: 0;
+      }
+      
+      /* Vignette Overlay for Liminal Atmosphere */
+      body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-shadow: inset 0 0 150px rgba(0,0,0,0.5);
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      /* Links - The classic blue/purple/red trio */
+      a { color: #000080; text-decoration: none; cursor: var(--cursor-pointer-safe); }
+      a:visited { color: #000080; cursor: var(--cursor-pointer-safe); }
+      a:hover { 
+        color: #FF0000; 
+        text-decoration: underline; 
+        cursor: var(--cursor-pointer-safe);
+      }
+      a:active { color: #FF0000; cursor: var(--cursor-pointer-safe); }
+      
+      button, .cursor-pointer {
+        cursor: var(--cursor-pointer-safe) !important;
+      }
+      
+      button:hover {
+        cursor: var(--cursor-pointer-safe) !important;
+      }
+      
+      /* Utilities for retro aesthetics */
+      .font-simsun { font-family: "SimSun", "宋体", serif; }
+      .pixel-text { text-shadow: none; -webkit-font-smoothing: none; }
+      
+      .blink {
+        animation: blinker 1s linear infinite;
+      }
+      @keyframes blinker {
+        50% { opacity: 0; }
+      }
+
+      @keyframes marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-100%); }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "path": "https://esm.sh/path@^0.12.7",
+    "vite": "https://esm.sh/vite@^7.2.7",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
