@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { SITE_NAME, BOARDS, MOCK_THREADS, SITE_URL } from './constants';
-import { Board } from './types';
+import { Board, Thread } from './types';
 import { BevelBox, RetroButton, Marquee, PixelIcon, Separator, RetroAd } from './components/RetroUI';
 import { LegendOfMirLogin } from './components/LegendOfMirLogin';
 import { SohuMall } from './components/SohuMall';
@@ -10,6 +11,7 @@ import { ServiceView } from './components/ServiceView';
 import { DigestView } from './components/DigestView';
 import { TradeView } from './components/TradeView';
 import { PersonalView } from './components/PersonalView';
+import { ThreadDetail } from './components/threads/ThreadDetail';
 
 const Clock = () => {
   const [time, setTime] = useState(new Date().toLocaleString());
@@ -36,7 +38,7 @@ const Sidebar = ({ onEnterShop, onEnterChat }: { onEnterShop: () => void, onEnte
       
       {/* Login */}
       <BevelBox title="用户登录" icon="user">
-        <div className="flex flex-col gap-1 text-xs">
+        <div className="flex flex-col gap-1 text-xs text-black">
           <div className="flex items-center">
             <span className="w-8">ID:</span>
             <input type="text" className="border border-gray-500 shadow-inner w-full h-5 text-xs px-1 font-simsun bg-white text-black" />
@@ -167,7 +169,7 @@ const BoardList = ({ handleBoardClick }: { handleBoardClick: (board: Board) => v
       <div className="bg-[#888888] border-l border-r border-b border-gray-800 p-[1px]">
         {/* Simulate <table cellspacing="1"> gap effect */}
         <div className="grid grid-cols-1 gap-[1px] bg-[#888888]">
-          <div className="bg-[#dfdfdf] grid grid-cols-[40px_1fr_60px_80px] text-xs text-center py-1 font-bold">
+          <div className="bg-[#dfdfdf] grid grid-cols-[40px_1fr_60px_80px] text-xs text-center py-1 font-bold text-black">
              <div>状态</div>
              <div>版块名称</div>
              <div>文章</div>
@@ -175,7 +177,7 @@ const BoardList = ({ handleBoardClick }: { handleBoardClick: (board: Board) => v
           </div>
           
           {BOARDS.map((board) => (
-            <div key={board.id} className="bg-[#f7f7f7] hover:bg-[#ffffe0] grid grid-cols-[40px_1fr_60px_80px] text-xs items-center min-h-[40px]">
+            <div key={board.id} className="bg-[#f7f7f7] hover:bg-[#ffffe0] grid grid-cols-[40px_1fr_60px_80px] text-xs items-center min-h-[40px] text-black">
               <div className="flex justify-center">
                  <PixelIcon type="folder" />
               </div>
@@ -199,7 +201,15 @@ const BoardList = ({ handleBoardClick }: { handleBoardClick: (board: Board) => v
     </div>
 );
 
-const ThreadList = ({ filterBoardId, activeBoard }: { filterBoardId?: string, activeBoard: Board | null }) => {
+const ThreadList = ({ 
+    filterBoardId, 
+    activeBoard,
+    onThreadClick
+}: { 
+    filterBoardId?: string, 
+    activeBoard: Board | null,
+    onThreadClick: (thread: Thread) => void
+}) => {
     const threads = filterBoardId 
       ? MOCK_THREADS.filter(t => t.boardId === filterBoardId)
       : MOCK_THREADS;
@@ -228,19 +238,22 @@ const ThreadList = ({ filterBoardId, activeBoard }: { filterBoardId?: string, ac
 
              {/* Rows */}
              {threads.map((thread) => (
-               <div key={thread.id} className="bg-[#F7F7F7] hover:bg-[#FFFFE0] grid grid-cols-[30px_1fr_80px_40px_40px_80px] text-xs items-center py-[2px] border-b border-dotted border-gray-300">
+               <div key={thread.id} className="bg-[#F7F7F7] hover:bg-[#FFFFE0] grid grid-cols-[30px_1fr_80px_40px_40px_80px] text-xs items-center py-[2px] border-b border-dotted border-gray-300 text-black">
                   <div className="text-center">
                      <PixelIcon type={thread.isSticky ? 'sticky' : 'file'} />
                   </div>
                   <div className="px-1 text-left truncate">
                      {thread.isHot && <PixelIcon type="hot" className="mr-1" />}
-                     <a href="#" className="text-[#000080] visited:text-[#800080]">
+                     <span 
+                        className="text-[#000080] visited:text-[#800080] cursor-pointer hover:underline hover:text-red-600"
+                        onClick={() => onThreadClick(thread)}
+                     >
                        {thread.title}
-                     </a>
+                     </span>
                      {thread.isNew && <PixelIcon type="new" className="ml-1" />}
                   </div>
                   <div className="text-center truncate text-black">{thread.author}</div>
-                  <div className="text-center font-mono">{thread.replies}</div>
+                  <div className="text-center font-mono text-black">{thread.replies}</div>
                   <div className="text-center font-mono text-gray-500">{thread.views}</div>
                   <div className="text-center text-[10px] font-mono text-gray-600">{thread.date.split(' ')[0]}</div>
                </div>
@@ -254,7 +267,7 @@ const ThreadList = ({ filterBoardId, activeBoard }: { filterBoardId?: string, ac
         </div>
         
         {/* Pagination simulated */}
-        <div className="flex justify-end mt-1 text-xs gap-1 items-center">
+        <div className="flex justify-end mt-1 text-xs gap-1 items-center text-black">
            <span>页次: 1/1</span>
            <RetroButton className="px-1">首页</RetroButton>
            <RetroButton className="px-1">上一页</RetroButton>
@@ -267,7 +280,7 @@ const ThreadList = ({ filterBoardId, activeBoard }: { filterBoardId?: string, ac
 };
 
 const FriendLinks = () => (
-     <div className="border border-gray-400 bg-white p-2 mb-4">
+     <div className="border border-gray-400 bg-white p-2 mb-4 text-black">
         <div className="text-xs font-bold text-gray-700 mb-1 border-b border-gray-300 pb-1 flex items-center gap-1">
           <PixelIcon type="link" />
           友情链接
@@ -315,6 +328,7 @@ type ViewState = 'home' | 'board' | 'thread' | 'game' | 'shop' | 'chat' | 'servi
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
   const [activeBoard, setActiveBoard] = useState<Board | null>(null);
+  const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [visitCount] = useState(128848);
 
   // Derive URL from current state
@@ -325,6 +339,7 @@ export default function App() {
       case 'game': return 'http://www.mir2.com.cn/index.htm';
       case 'chat': return 'http://chat.mianyangbbs.cn/room.asp?id=love';
       case 'board': return `http://${SITE_URL}/board.asp?id=${activeBoard?.id || 'unknown'}`;
+      case 'thread': return `http://${SITE_URL}/view.asp?id=${activeThreadId || 'unknown'}`;
       case 'service': return `http://${SITE_URL}/service.asp`;
       case 'digest': return `http://${SITE_URL}/digest.asp`;
       case 'trade': return `http://${SITE_URL}/trade.asp`;
@@ -337,10 +352,23 @@ export default function App() {
     setActiveBoard(board);
     setCurrentView('board');
   };
+  
+  const handleThreadClick = (thread: Thread) => {
+    setActiveThreadId(thread.id);
+    // If not already in the board view, we might want to know which board it belongs to, 
+    // but for now simple navigation is enough.
+    // Ensure activeBoard matches the thread's board if coming from "Latest Topics"
+    if (!activeBoard) {
+        const board = BOARDS.find(b => b.id === thread.boardId);
+        if (board) setActiveBoard(board);
+    }
+    setCurrentView('thread');
+  };
 
   const goHome = () => {
     setCurrentView('home');
     setActiveBoard(null);
+    setActiveThreadId(null);
   };
 
   const enterGame = () => setCurrentView('game');
@@ -365,21 +393,22 @@ export default function App() {
     return (
       <div className="min-h-full w-full" style={{
           backgroundColor: '#87CEEB',
-          backgroundImage: "url('https://i.imgur.com/Qeun7PX.png')",
+          backgroundImage: "url('https://i.ibb.co/jZsb5V6L/yupp-generated-image-293314.png')",
           backgroundRepeat: 'repeat',
           imageRendering: 'pixelated'
       }}>
         <div className="max-w-[960px] mx-auto p-[4px] bg-[#cccccc] min-h-full shadow-2xl border-l border-r border-white relative">
-          <div className="bg-[#eeeeee] p-2 min-h-full border border-gray-500 relative z-10">
+          <div className="bg-[#eeeeee] p-2 min-h-full border border-gray-500 relative z-10 text-black">
             <TopBanner onEnterGame={enterGame} />
             <Navigation onNavigate={handleNavNavigate} />
 
             {/* Location Breadcrumb */}
-            <div className="text-xs my-2 font-simsun flex items-center">
+            <div className="text-xs my-2 font-simsun flex items-center text-black">
               <PixelIcon type="folder" className="mr-1" />
               当前位置：
               <a href="#" onClick={goHome} className="hover:text-red-600">首页</a> 
-              {activeBoard && <span> &gt; {activeBoard.title}</span>}
+              {activeBoard && <span> &gt; <a href="#" onClick={() => setCurrentView('board')} className="hover:text-red-600">{activeBoard.title}</a></span>}
+              {currentView === 'thread' && <span> &gt; 正文</span>}
               {currentView === 'service' && <span> &gt; 社区服务</span>}
               {currentView === 'digest' && <span> &gt; 精华区</span>}
               {currentView === 'trade' && <span> &gt; 同城交易</span>}
@@ -413,12 +442,24 @@ export default function App() {
                     </div>
 
                     <BoardList handleBoardClick={handleBoardClick} />
-                    <ThreadList filterBoardId={activeBoard?.id} activeBoard={activeBoard} />
+                    <ThreadList 
+                        filterBoardId={activeBoard?.id} 
+                        activeBoard={activeBoard} 
+                        onThreadClick={handleThreadClick}
+                    />
                   </>
                 )}
 
                 {currentView === 'board' && (
-                     <ThreadList filterBoardId={activeBoard?.id} activeBoard={activeBoard} />
+                     <ThreadList 
+                        filterBoardId={activeBoard?.id} 
+                        activeBoard={activeBoard} 
+                        onThreadClick={handleThreadClick}
+                     />
+                )}
+
+                {currentView === 'thread' && activeThreadId && (
+                     <ThreadDetail thread={MOCK_THREADS.find(t => t.id === activeThreadId) as Thread} />
                 )}
 
                 {/* Sub-Views */}

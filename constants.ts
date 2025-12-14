@@ -1,3 +1,4 @@
+
 import { Board, Thread } from './types';
 
 export const SITE_NAME = "沔阳论坛网";
@@ -75,7 +76,6 @@ export const MOCK_THREADS: Thread[] = [
     views: 8990,
     replies: 666,
     isHot: true,
-    isSticky: true
   },
   {
     id: "t4",

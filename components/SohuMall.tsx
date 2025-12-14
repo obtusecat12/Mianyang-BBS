@@ -16,7 +16,7 @@ const GifHot = () => (
 );
 
 // Sidebar Box Component
-const SideBox = ({ title, children, color = "orange" }: { title: string, children: React.ReactNode, color?: "orange" | "blue" | "gray" }) => {
+const SideBox = ({ title, children, color = "orange" }: { title: string, children?: React.ReactNode, color?: "orange" | "blue" | "gray" }) => {
     const borderColor = color === 'orange' ? 'border-[#ff9900]' : color === 'blue' ? 'border-[#003399]' : 'border-[#ccc]';
     const headerBg = color === 'orange' ? 'bg-[#ff9900]' : color === 'blue' ? 'bg-[#003399]' : 'bg-[#e0e0e0]';
     const headerText = color === 'gray' ? 'text-black' : 'text-white';
@@ -272,7 +272,7 @@ export const SohuMall: React.FC<{ onExit: () => void }> = ({ onExit }) => {
                         <label className="flex items-center gap-1 cursor-pointer hover:bg-[#eee]"><input type="radio" name="poll" className="bg-white" /> 爱立信</label>
                         <label className="flex items-center gap-1 cursor-pointer hover:bg-[#eee]"><input type="radio" name="poll" className="bg-white" /> 西门子</label>
                         <div className="text-center mt-1">
-                            <button onClick={() => setPollVoted(true)} className="border border-gray-500 bg-[#e0e0e0] px-2 text-[10px] text-black">投票</button>
+                            <button onClick={() => setPollVoted(true)} className="border border-gray-500 bg-white px-2 text-[10px] text-black">投票</button>
                         </div>
                       </div>
                   ) : (

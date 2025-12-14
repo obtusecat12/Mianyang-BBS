@@ -12,7 +12,7 @@ const TRADE_ITEMS = [
 
 export const TradeView: React.FC = () => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 text-black">
         {/* Header */}
         <div className="bg-[#ffcc00] border-2 border-[#cc9900] p-2 flex justify-between items-end">
              <div>
@@ -28,7 +28,7 @@ export const TradeView: React.FC = () => {
         {/* Categories Grid */}
         <div className="grid grid-cols-4 gap-2 text-xs text-center">
             {['手机通讯', '电脑配件', '家用电器', '交通工具', '房屋信息', '求职招聘', '书籍音像', '其他闲置'].map(cat => (
-                <BevelBox key={cat} className="bg-white hover:bg-yellow-50 cursor-pointer">
+                <BevelBox key={cat} className="bg-white hover:bg-yellow-50 cursor-pointer text-black">
                     <div className="p-2 font-bold text-blue-800">{cat}</div>
                 </BevelBox>
             ))}
@@ -44,7 +44,7 @@ export const TradeView: React.FC = () => {
                 </div>
             </div>
             
-            <div className="p-1">
+            <div className="p-1 text-black">
                 <table className="w-full text-xs border-collapse">
                     <thead className="bg-[#f0f0f0] text-[#333]">
                         <tr>

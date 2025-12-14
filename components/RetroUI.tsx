@@ -22,7 +22,7 @@ export const BevelBox: React.FC<{
             <button className="w-[14px] h-[12px] bg-[#c0c0c0] border border-white border-b-gray-600 border-r-gray-600 leading-[8px] text-[8px] text-black shadow-[inset_1px_1px_0_#fff]">×</button>
           </div>
         </div>
-        <div className="border border-gray-400 p-1 bg-[#dfdfdf]">
+        <div className="border border-gray-400 p-1 bg-[#dfdfdf] text-black">
           {children}
         </div>
       </div>
@@ -367,7 +367,7 @@ export const RetroAd: React.FC<AdProps> = ({ type, variant, onClick, onChatEnter
       ];
 
       return (
-          <div className="border border-gray-500 bg-[#fff5ee] mb-2 text-xs font-simsun">
+          <div className="border border-gray-500 bg-[#fff5ee] mb-2 text-xs font-simsun text-black">
              <div className="bg-[#cc0000] text-white text-center font-bold py-[2px] border-b border-gray-500 flex justify-between px-2 items-center">
                 <span className="tracking-widest">商家推荐</span>
                 <span className="font-normal text-[10px] text-yellow-200 animate-pulse">广告招租</span>
@@ -410,7 +410,7 @@ export const RetroAd: React.FC<AdProps> = ({ type, variant, onClick, onChatEnter
                   <span>热门搜索榜</span>
                 </div>
              </div>
-             <ul className="text-xs leading-4 bg-white border-l border-gray-400 border-r border-white border-b border-white">
+             <ul className="text-xs leading-4 bg-white border-l border-gray-400 border-r border-white border-b border-white text-black">
                 {[
                     {text: "流星花园全集", count: 9822, hot: true},
                     {text: "传奇私服外挂", count: 8541, hot: true},

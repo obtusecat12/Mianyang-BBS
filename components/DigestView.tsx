@@ -22,16 +22,16 @@ export const DigestView: React.FC = () => {
         </div>
 
         {/* Filter Bar */}
-        <div className="bg-[#dfdfdf] border border-gray-400 p-1 flex gap-2 text-xs items-center">
+        <div className="bg-[#dfdfdf] border border-gray-400 p-1 flex gap-2 text-xs items-center text-black">
             <span>按分类浏览:</span>
-            <select className="border border-gray-600 text-xs h-[18px]">
+            <select className="border border-gray-600 text-xs h-[18px] bg-white">
                 <option>全部文章</option>
                 <option>网络文学</option>
                 <option>技术专区</option>
                 <option>情感天地</option>
             </select>
             <span>按时间:</span>
-            <select className="border border-gray-600 text-xs h-[18px]">
+            <select className="border border-gray-600 text-xs h-[18px] bg-white">
                 <option>2000年</option>
                 <option>1999年</option>
             </select>
@@ -48,7 +48,7 @@ export const DigestView: React.FC = () => {
                 <div>收藏日期</div>
             </div>
             
-            <div className="bg-[#f0f0f0]">
+            <div className="bg-[#f0f0f0] text-black">
                 {DIGEST_ARTICLES.map((article, idx) => (
                     <div key={idx} className="grid grid-cols-[40px_1fr_80px_80px_80px] text-xs py-1 items-center border-b border-dotted border-gray-400 hover:bg-[#ffffe0]">
                         <div className="text-center"><PixelIcon type="fire" /></div>
@@ -64,7 +64,7 @@ export const DigestView: React.FC = () => {
         </div>
 
         {/* Bottom Pagination */}
-        <div className="flex justify-center mt-2 gap-1 text-xs">
+        <div className="flex justify-center mt-2 gap-1 text-xs text-black">
             <span>共 128 篇精华</span>
             <span className="text-blue-800 underline cursor-pointer">[首页]</span>
             <span className="text-blue-800 underline cursor-pointer">[上一页]</span>

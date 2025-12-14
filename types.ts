@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface Board {
   id: string;
   title: string;
@@ -20,10 +22,19 @@ export interface Thread {
   isSticky?: boolean;
 }
 
+export interface ThreadPost {
+  id: number;
+  author: User;
+  content: React.ReactNode;
+  date: string;
+  floor: number; // 1 for OP, 2 for first reply, etc.
+}
+
 export interface User {
   username: string;
   rank: string; // e.g., "Newbie", "Senior Member", "Admin"
   posts: number;
   joinDate: string;
-  avatar?: string;
+  avatar?: string; // Icon type or image URL
+  signature?: string;
 }
