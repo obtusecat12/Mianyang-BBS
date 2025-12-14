@@ -12,13 +12,66 @@ import { DigestView } from './components/DigestView';
 import { TradeView } from './components/TradeView';
 import { PersonalView } from './components/PersonalView';
 import { ThreadDetail } from './components/threads/ThreadDetail';
+import { CRTMonitorOverlay } from './components/CRTMonitorOverlay';
+
+// --- Retro Filters Component ---
+const RetroFilters = () => (
+  <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
+    <defs>
+      {/* 
+         "Digital Decay" Filter:
+         1. Posterize: Reduces color palette to simulate 8-bit/GIF depth (web safe colors).
+         2. Noise: Adds grain/compression artifacts.
+         3. Contrast: High contrast to simulate bad scanning or old monitors.
+      */}
+      <filter id="retro-decay">
+        {/* Reduce Colors */}
+        <feComponentTransfer in="SourceGraphic" result="posterized">
+           <feFuncR type="discrete" tableValues="0 0.25 0.5 0.75 1"/>
+           <feFuncG type="discrete" tableValues="0 0.25 0.5 0.75 1"/>
+           <feFuncB type="discrete" tableValues="0 0.25 0.5 0.75 1"/>
+        </feComponentTransfer>
+
+        {/* Add Noise */}
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 -0.15 0.1" in="noise" result="noiseAlpha"/>
+        <feBlend mode="overlay" in="noiseAlpha" in2="posterized" result="grainy"/>
+
+        {/* Adjust Tone */}
+        <feColorMatrix in="grainy" type="matrix" values="
+          1.1 0 0 0 -0.05
+          0 1.1 0 0 -0.05
+          0 0 1.1 0 -0.05
+          0 0 0 1 0" result="contrasted" />
+          
+        {/* Slight Sepia for age */}
+        <feColorMatrix in="contrasted" type="matrix" values="
+          0.393 0.769 0.189 0 0
+          0.349 0.686 0.168 0 0
+          0.272 0.534 0.131 0 0
+          0 0 0 1 0" result="sepia" />
+          
+        {/* Blend Sepia lightly back into original to not be too brown */}
+        <feBlend mode="normal" in="sepia" in2="contrasted" result="final" opacity="0.1"/>
+        <feComposite in="final" in2="contrasted" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+      </filter>
+    </defs>
+  </svg>
+);
 
 const Clock = () => {
-  const [time, setTime] = useState(new Date().toLocaleString());
+  // Helper to force year to 2001 while keeping current time
+  const getRetroTime = () => {
+    const now = new Date();
+    now.setFullYear(2001);
+    return now.toLocaleString();
+  };
+
+  const [time, setTime] = useState(getRetroTime());
   
   useEffect(() => {
     const timer = setInterval(() => {
-      setTime(new Date().toLocaleString());
+      setTime(getRetroTime());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -397,6 +450,9 @@ export default function App() {
           backgroundRepeat: 'repeat',
           imageRendering: 'pixelated'
       }}>
+        {/* Inject Retro Filters */}
+        <RetroFilters />
+        
         <div className="max-w-[960px] mx-auto p-[4px] bg-[#cccccc] min-h-full shadow-2xl border-l border-r border-white relative">
           <div className="bg-[#eeeeee] p-2 min-h-full border border-gray-500 relative z-10 text-black">
             <TopBanner onEnterGame={enterGame} />
@@ -489,8 +545,11 @@ export default function App() {
   };
 
   return (
-    <IEFrame url={getVirtualUrl()} onGoHome={goHome}>
-      {renderContent()}
-    </IEFrame>
+    <>
+      <CRTMonitorOverlay />
+      <IEFrame url={getVirtualUrl()} onGoHome={goHome}>
+        {renderContent()}
+      </IEFrame>
+    </>
   );
 }

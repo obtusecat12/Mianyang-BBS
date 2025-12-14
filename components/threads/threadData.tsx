@@ -3,22 +3,23 @@ import React from 'react';
 import { ThreadPost } from '../../types';
 
 // Helper to generate a generic user with random avatars
+// Using PNG output for DiceBear ensures better pixelation effects in filters
 const mockUser = (name: string, rank: string, posts: number, sig?: string, avatarType: 'pixel' | 'bot' | 'cat' | 'human' = 'pixel') => {
   let avatarUrl = '';
   switch(avatarType) {
     case 'bot':
-      avatarUrl = `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${name}`;
+      avatarUrl = `https://api.dicebear.com/9.x/bottts-neutral/png?seed=${name}`;
       break;
     case 'cat':
       // Using RoboHash set 4 for cats
       avatarUrl = `https://robohash.org/${name}.png?set=set4&size=150x150`;
       break;
     case 'human':
-      avatarUrl = `https://api.dicebear.com/9.x/avataaars/svg?seed=${name}`;
+      avatarUrl = `https://api.dicebear.com/9.x/avataaars/png?seed=${name}`;
       break;
     case 'pixel':
     default:
-      avatarUrl = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${name}`;
+      avatarUrl = `https://api.dicebear.com/9.x/pixel-art/png?seed=${name}`;
       break;
   }
 

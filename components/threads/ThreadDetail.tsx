@@ -52,7 +52,12 @@ export const ThreadDetail: React.FC<{ thread: Thread }> = ({ thread }) => {
                       <div className="font-bold text-[#000080] mb-1 truncate w-full">{post.author.username}</div>
                       <div className="w-[60px] h-[60px] bg-white border border-gray-500 mb-1 flex items-center justify-center overflow-hidden">
                           {post.author.avatar ? (
-                             <img src={post.author.avatar} alt="avatar" />
+                             <img 
+                                src={post.author.avatar} 
+                                alt="avatar" 
+                                style={{ filter: 'url(#retro-decay)' }}
+                                className="w-full h-full object-cover"
+                             />
                           ) : (
                              <PixelIcon type="user" className="scale-[2] opacity-50" />
                           )}
