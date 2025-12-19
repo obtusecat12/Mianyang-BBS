@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 
 /**
  * Advanced CRT Monitor Overlay
@@ -10,9 +11,14 @@ import React from 'react';
  * - Tube Curvature (Vignette & Inset Shadow)
  * - Signal Noise (Film grain)
  * - Refresh Rate Bar (Rolling scanline)
+ * - Bezel Mask (User provided)
  */
 export const CRTMonitorOverlay = () => {
-  return (
+  // Use createPortal to render the overlay directly into document.body.
+  // This ensures the bezel/overlay stays fixed at full viewport size,
+  // while the #root element (which contains the App UI) can be scaled down
+  // to fit inside the bezel's clear area without shrinking the bezel itself.
+  return createPortal(
     <>
       <style>{`
         :root {
@@ -31,17 +37,27 @@ export const CRTMonitorOverlay = () => {
             pointer-events: none;
             overflow: hidden;
             
-            /* Curvature & Bezel Shadow */
+            /* Curvature & Bezel Shadow mixed with Scanlines */
             background: radial-gradient(
                 circle,
                 rgba(0,0,0,0) 55%,
-                rgba(0,0,0,0.15) 80%,
-                rgba(0,0,0,0.5) 100%
+                rgba(0,0,0,0.1) 80%,
+                rgba(0,0,0,0.4) 100%
             );
-            box-shadow: inset 0 0 5rem rgba(0,0,0,0.3);
         }
 
-        /* --- 2. Scanlines (Interlaced) --- */
+        /* --- 2. Bezel Mask (The User Provided Image) --- */
+        .crt-mask {
+            position: absolute;
+            inset: 0;
+            z-index: 100; /* Topmost layer of the CRT effect */
+            background-image: url('https://i.imgur.com/o7L6SLJ.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+
+        /* --- 3. Scanlines (Interlaced) --- */
         .crt-scanlines {
             position: absolute;
             inset: 0;
@@ -57,7 +73,7 @@ export const CRTMonitorOverlay = () => {
             pointer-events: none;
         }
 
-        /* --- 3. RGB Phosphor Mesh (The "Screen Door") --- */
+        /* --- 4. RGB Phosphor Mesh (The "Screen Door") --- */
         /* Simulates the physical RGB dots on the screen */
         .crt-mesh {
             position: absolute;
@@ -73,7 +89,7 @@ export const CRTMonitorOverlay = () => {
             pointer-events: none;
         }
 
-        /* --- 4. Refresh Rate Bar (Rolling Line) --- */
+        /* --- 5. Refresh Rate Bar (Rolling Line) --- */
         .crt-refresh-line {
             position: absolute;
             top: 0;
@@ -87,7 +103,7 @@ export const CRTMonitorOverlay = () => {
             opacity: 0.6;
         }
 
-        /* --- 5. Signal Noise (Static) --- */
+        /* --- 6. Signal Noise (Static) --- */
         .crt-noise {
             position: absolute;
             inset: 0;
@@ -110,10 +126,13 @@ export const CRTMonitorOverlay = () => {
             filter: contrast(1.1) brightness(1.1) saturate(1.15);
             
             /* Hide overflow to prevent scrollbars outside the frame */
-            background-color: #050505; /* Dark bezel color behind the screen */
+            background-color: #000; /* Dark background to blend with scaled content */
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* --- Animations --- */
+        /* --- Turn-on Animation & Curvature Feel for Content --- */
         @keyframes scanlineScroll {
             0% { top: -10%; opacity: 0; }
             10% { opacity: 0.5; }
@@ -129,26 +148,43 @@ export const CRTMonitorOverlay = () => {
             100% { transform: translate(0,0); }
         }
 
-        /* Turn-on animation (Optional fun detail) */
         @keyframes turnOn {
             0% { transform: scale(1, 0.002); opacity: 0; filter: brightness(30); }
             30% { transform: scale(1, 0.002); opacity: 1; filter: brightness(10); }
             60% { transform: scale(1, 1); opacity: 1; filter: brightness(5); }
-            100% { transform: scale(1, 1); opacity: 1; filter: brightness(1); }
+            /* Adjusted scaling to 0.925 to ensure content fits within the bezel mask's safe area */
+            100% { transform: scale(0.925); opacity: 1; filter: brightness(1); }
         }
         
         #root {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000;
+            
+            /* 
+               Curvature Feel:
+               1. Round corners to match the physical tube mask
+               2. Inset shadow to create depth (the screen sits 'inside' the bezel)
+               3. Scale down to fit within the mask boundaries
+            */
+            border-radius: 20px; 
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.9); 
+            transform-origin: center;
+            
             animation: turnOn 0.3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
         }
 
       `}</style>
       
       <div className="crt-container">
+          <div className="crt-mask"></div>
           <div className="crt-scanlines"></div>
           <div className="crt-mesh"></div>
           <div className="crt-refresh-line"></div>
           <div className="crt-noise"></div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };
