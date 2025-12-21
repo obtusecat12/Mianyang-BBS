@@ -1,151 +1,411 @@
-import React, { useRef, useState, useLayoutEffect } from 'react';
+
+import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 // --- authentic Assets ---
 const ASSETS = {
     LOGO: "https://win98icons.alexmeub.com/icons/png/msie1-2.png",
-    SEARCH: "https://win98icons.alexmeub.com/icons/png/search_web-0.png",
     WINDOWS: "https://win98icons.alexmeub.com/icons/png/windows-0.png",
-    STOP: "https://win98icons.alexmeub.com/icons/png/msg_error-0.png",
-    NET: "https://win98icons.alexmeub.com/icons/png/html-5.png"
+    NET: "https://win98icons.alexmeub.com/icons/png/html-5.png",
+    NOTEPAD: "https://win98icons.alexmeub.com/icons/png/notepad-0.png"
 };
 
-// --- Vector Icons (Preserved) ---
-const VectorIcons = {
-  Back: ({ disabled }: { disabled?: boolean }) => (
-    <svg width="24" height="24" viewBox="0 0 30 30" fill="none" style={{ filter: disabled ? 'grayscale(100%) opacity(0.5)' : 'none' }}>
-      <defs>
-         <linearGradient id="greenBtn" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#85E785" />
-            <stop offset="100%" stopColor="#259C25" />
-         </linearGradient>
-         <filter id="dropShadow" x="0" y="0" width="150%" height="150%">
-            <feOffset dx="1" dy="1" />
-            <feGaussianBlur stdDeviation="1" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-         </filter>
-      </defs>
-      <circle cx="15" cy="15" r="13" fill="url(#greenBtn)" stroke="#186F18" strokeWidth="1" />
-      <path d="M16 8 L8 15 L16 22" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" filter="url(#dropShadow)" />
-      <path d="M22 15 L10 15" stroke="white" strokeWidth="3" strokeLinecap="round" filter="url(#dropShadow)" />
-    </svg>
-  ),
-  Forward: ({ disabled }: { disabled?: boolean }) => (
-    <svg width="24" height="24" viewBox="0 0 30 30" fill="none" style={{ filter: disabled ? 'grayscale(100%) opacity(0.5)' : 'none' }}>
-      <circle cx="15" cy="15" r="13" fill="url(#greenBtn)" stroke="#186F18" strokeWidth="1" />
-      <path d="M14 8 L22 15 L14 22" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" filter="url(#dropShadow)" />
-      <path d="M8 15 L20 15" stroke="white" strokeWidth="3" strokeLinecap="round" filter="url(#dropShadow)" />
-    </svg>
-  ),
-  Refresh: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24">
-       <rect x="3" y="2" width="16" height="19" fill="white" stroke="#666" strokeWidth="1" />
-       <path d="M19 2 L19 21 L3 21" fill="none" stroke="#666" opacity="0.5" />
-       <path d="M13 2 L19 8 L19 21" fill="#fff" fillOpacity="0" />
-       <path d="M13 2 L13 8 L19 8" fill="#e0e0e0" stroke="#999" />
-       <path d="M8 12 L11 9 L14 12" fill="none" stroke="#008000" strokeWidth="1.5" />
-       <path d="M11 9 L11 15" fill="none" stroke="#008000" strokeWidth="1.5" />
-       <path d="M14 13 L11 16 L8 13" fill="none" stroke="#008000" strokeWidth="1.5" />
-    </svg>
-  ),
-  Home: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24">
-       <path d="M12 2 L2 11 L4 11 L4 21 L9 21 L9 15 L15 15 L15 21 L20 21 L20 11 L22 11 Z" fill="#D4D0C8" stroke="#555" />
-       <path d="M12 3 L3.5 10.5 L20.5 10.5 Z" fill="#E14900" />
-       <rect x="5" y="11" width="14" height="9" fill="#F0F0E0" />
-       <rect x="9" y="15" width="6" height="6" fill="#6699CC" stroke="#336699" />
-       <rect x="9" y="15" width="6" height="1" fill="#AACCFF" />
-    </svg>
-  ),
-  Favorites: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24">
-       <path d="M2 5 L9 5 L11 7 L20 7 L20 19 L2 19 Z" fill="#F8D775" stroke="#B8860B" />
-       <path d="M3 8 L19 8 L19 18 L3 18 Z" fill="#FFE082" />
-       <path d="M14 6 L15 9 L18 9 L15.5 11 L16.5 14 L14 12 L11.5 14 L12.5 11 L10 9 L13 9 Z" fill="#FFFF00" stroke="#B8860B" strokeWidth="0.5" />
-    </svg>
-  ),
-  History: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24">
-       <circle cx="12" cy="12" r="9" fill="#F0F0F0" stroke="#666" strokeWidth="1" />
-       <circle cx="12" cy="12" r="7" fill="#FFF" stroke="#CCC" />
-       <path d="M12 6 L12 12 L16 12" stroke="#000" strokeWidth="1.5" />
-       <path d="M5 12 A7 7 0 0 0 12 19" fill="none" stroke="#008000" strokeWidth="2" />
-       <path d="M5 12 L2 10 L5 8" fill="#008000" />
-    </svg>
-  ),
-  Mail: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24">
-       <rect x="2" y="5" width="20" height="14" fill="#F0F0F0" stroke="#666" />
-       <path d="M2 5 L12 13 L22 5" fill="#E0E0E0" stroke="#666" />
-       <rect x="16" y="6" width="4" height="5" fill="#FF9999" stroke="#CC0000" strokeWidth="0.5" />
-    </svg>
-  ),
-  Print: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24">
-       <path d="M5 6 L19 6 L19 18 L5 18 Z" fill="#CCC" stroke="#666" />
-       <rect x="7" y="3" width="10" height="4" fill="white" stroke="#666" />
-       <rect x="7" y="14" width="10" height="6" fill="white" stroke="#666" />
-       <rect x="8" y="16" width="8" height="1" fill="#999" />
-       <rect x="8" y="18" width="8" height="1" fill="#999" />
-    </svg>
-  ),
+// --- User Provided Context Icons (JPGs with black background) ---
+const CONTEXT_ICONS = {
+    Back: "https://i.ibb.co/5W1sR4Dc/Back.jpg",
+    Forward: "https://i.ibb.co/FqmdbrsL/Forward.jpg",
+    Cut: "https://i.ibb.co/3yhyQt5m/Cut.jpg",
+    Copy: "https://i.ibb.co/0jv5MFZC/Copy.jpg",
+    Paste: "https://i.ibb.co/h1W1f3kH/Paste.jpg",
+    Properties: "https://i.ibb.co/Dgvdy9G3/Properties.jpg",
 };
+
+// --- User Provided Toolbar Icons ---
+const TOOLBAR_ICONS = {
+    Back: "https://i.ibb.co/5W1sR4Dc/Back.jpg",
+    Forward: "https://i.ibb.co/FqmdbrsL/Forward.jpg",
+    Up: "https://i.ibb.co/Sws0G04Q/Up.jpg",
+    Stop: "https://i.ibb.co/8DK1hd2N/Stop.jpg",
+    Refresh: "https://i.ibb.co/840Rm6ns/Refresh.jpg",
+    Home: "https://i.ibb.co/8D6RW3LQ/Home.jpg",
+    Search: "https://i.ibb.co/nJhBBkc/Search.jpg",
+    Favorites: "https://i.ibb.co/35JdPF21/Favorites.jpg",
+    History: "https://i.ibb.co/tMVsKGZQ/History.jpg",
+    Folders: "https://i.ibb.co/gLPgchRq/Folders.jpg",
+};
+
+// --- Hooks ---
+function useClickOutside(ref: React.RefObject<HTMLElement>, callback: () => void) {
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            // Check if the click is on a dropdown trigger (to prevent immediate closing when toggling)
+            const target = event.target as HTMLElement;
+            if (target.closest('[data-dropdown-trigger]')) {
+                return;
+            }
+
+            if (ref.current && !ref.current.contains(target as Node)) {
+                callback();
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [ref, callback]);
+}
 
 // --- Helper Components ---
 
 const ToolbarHandle = () => (
-    <div className="flex flex-row items-center h-full px-[2px] cursor-ew-resize mr-[2px] border-l border-white">
+    <div className="flex flex-row items-center h-full px-[2px] cursor-ew-resize mr-[2px] border-l border-white shrink-0" style={{ display: 'flex' }}>
         <div className="w-[3px] h-[calc(100%-4px)] border-t border-l border-white border-b border-r border-[#808080] bg-[#d4d0c8]"></div>
     </div>
 );
 
 const ToolbarSeparator = () => (
-    <div className="h-[24px] w-[2px] border-l border-[#808080] border-r border-white mx-1 my-auto"></div>
+    <div className="h-[36px] w-[2px] border-l border-[#808080] border-r border-white mx-1 my-auto shrink-0"></div>
 );
 
-const ToolbarButton: React.FC<{ 
-    icon: React.ReactNode, 
+// Component to remove black background from JPEGs on the fly
+const ProcessedIcon: React.FC<{ src: string, alt: string, className?: string }> = ({ src, alt, className }) => {
+    const [imgUrl, setImgUrl] = useState<string>(src);
+    
+    useEffect(() => {
+        let active = true;
+        const img = new Image();
+        img.crossOrigin = "Anonymous"; 
+        img.src = src;
+        
+        img.onload = () => {
+             if(!active) return;
+             const canvas = document.createElement('canvas');
+             canvas.width = img.width;
+             canvas.height = img.height;
+             const ctx = canvas.getContext('2d', { willReadFrequently: true });
+             if(!ctx) return;
+             
+             ctx.drawImage(img, 0, 0);
+             
+             try {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                const width = canvas.width;
+                const height = canvas.height;
+                
+                // Get the top-left pixel color to determine background (usually black 0,0,0)
+                const bgR = data[0];
+                const bgG = data[1];
+                const bgB = data[2];
+                const tolerance = 40; 
+                
+                const match = (i: number) => {
+                    return Math.abs(data[i] - bgR) < tolerance &&
+                           Math.abs(data[i+1] - bgG) < tolerance &&
+                           Math.abs(data[i+2] - bgB) < tolerance;
+                };
+
+                const stack: number[] = [];
+                const visited = new Uint8Array(width * height);
+                
+                const add = (x: number, y: number) => {
+                    if (x < 0 || x >= width || y < 0 || y >= height) return;
+                    const idx = y * width + x;
+                    if (visited[idx]) return;
+                    
+                    const pixelIdx = idx * 4;
+                    if (match(pixelIdx)) {
+                        visited[idx] = 1;
+                        stack.push(x, y);
+                        data[pixelIdx + 3] = 0;
+                    }
+                };
+                
+                // Seed flood fill from corners
+                add(0, 0);
+                add(width - 1, 0);
+                add(0, height - 1);
+                add(width - 1, height - 1);
+                
+                while (stack.length > 0) {
+                    const y = stack.pop()!;
+                    const x = stack.pop()!;
+                    add(x + 1, y);
+                    add(x - 1, y);
+                    add(x, y + 1);
+                    add(x, y - 1);
+                }
+                
+                ctx.putImageData(imageData, 0, 0);
+                setImgUrl(canvas.toDataURL());
+             } catch (e) {
+                 console.warn("Could not process image transparency", e);
+             }
+        };
+        
+        return () => { active = false; };
+    }, [src]);
+
+    return <img src={imgUrl} alt={alt} className={className} style={{ display: 'block' }} />;
+};
+
+// --- Menu System ---
+
+const MenuSeparator = () => (
+    <div className="border-b border-white border-t border-[#808080] my-[2px] mx-[2px]"></div>
+);
+
+const MenuItem: React.FC<{ 
     label: string, 
+    shortcut?: string, 
+    icon?: string, 
     disabled?: boolean, 
-    active?: boolean,
-    onClick?: () => void
-}> = ({ icon, label, disabled, active, onClick }) => {
+    hasSubmenu?: boolean,
+    onClick?: () => void 
+}> = ({ label, shortcut, icon, disabled, hasSubmenu, onClick }) => (
+    <div 
+        onClick={!disabled ? onClick : undefined}
+        className={`
+            flex items-center px-4 py-[3px] text-[11px] font-retro cursor-default select-none relative
+            ${disabled ? 'text-[#808080] text-shadow-white pointer-events-none' : 'text-black hover:bg-[#000080] hover:text-white group'}
+        `}
+    >
+        {/* Icon / Check area - Fixed width 16px */}
+        <div className="w-[16px] mr-2 flex justify-center items-center">
+            {icon && (
+                <ProcessedIcon 
+                    src={icon} 
+                    className={`w-4 h-4 object-contain ${disabled ? 'opacity-50 grayscale' : ''}`} 
+                    alt="" 
+                />
+            )}
+        </div>
+        
+        <span className="flex-1 whitespace-nowrap">{label}</span>
+        
+        {shortcut && <span className="ml-6">{shortcut}</span>}
+        {hasSubmenu && <span className="ml-4 font-sans text-[9px]">▶</span>}
+    </div>
+);
+
+// Dropdown Container
+const DropdownContainer: React.FC<{ 
+    children: React.ReactNode, 
+    isOpen: boolean, 
+    position: { top: number, left: number },
+    onClose: () => void,
+    zIndex?: number
+}> = ({ children, isOpen, position, onClose, zIndex = 50 }) => {
+    const ref = useRef<HTMLDivElement>(null);
+    useClickOutside(ref, onClose);
+
+    if (!isOpen) return null;
+
     return (
         <div 
-            onClick={!disabled ? onClick : undefined}
-            className={`
-                flex flex-row items-center justify-center px-1 h-[36px] min-w-[42px] 
-                cursor-default group gap-1 font-retro
-                ${disabled ? 'opacity-50 grayscale' : 'hover:border-[#fff] hover:border-l-[#fff] hover:border-t-[#fff] hover:border-r-[#808080] hover:border-b-[#808080] active:border-[#808080] active:border-l-[#808080] active:border-t-[#808080] active:border-r-[#fff] active:border-b-[#fff] active:translate-y-[1px]'}
-                ${!disabled && !active ? 'border border-transparent' : ''}
-            `}
+            ref={ref}
+            className="fixed bg-[#d4d0c8] py-[1px] min-w-[150px]"
+            style={{ 
+                top: position.top, 
+                left: position.left, 
+                zIndex: zIndex,
+                display: 'flex',
+                flexDirection: 'column',
+                // Authentic Windows 98 Menu Border
+                borderLeft: '1px solid #fff',
+                borderTop: '1px solid #fff',
+                borderRight: '1px solid #404040',
+                borderBottom: '1px solid #404040',
+                boxShadow: '1px 1px 0 #000', // Hard pixel shadow
+            }}
         >
-            <div className={`flex flex-col items-center justify-center ${disabled ? '' : 'group-active:translate-x-[1px] group-active:translate-y-[1px]'}`}>
-                {/* Enforce 24px container for icons to ensure uniformity */}
-                <div className="w-[24px] h-[24px] flex items-center justify-center">
-                    {icon}
-                </div>
-                <span className="text-[11px] text-black leading-none mt-[2px] font-retro">{label}</span>
+            <div className="border-t border-l border-[#dfdfdf] border-b border-r border-[#808080]">
+                {children}
             </div>
-            {['Mail', 'Print'].includes(label) && (
-                 <div className="text-[8px] ml-[-2px] self-center">▼</div>
+        </div>
+    );
+};
+
+// Notepad (View Source) Component - Draggable Version
+const Notepad: React.FC<{
+    isOpen: boolean;
+    onClose: () => void;
+    content: string;
+    title: string;
+}> = ({ isOpen, onClose, content, title }) => {
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false);
+    const [rel, setRel] = useState({ x: 0, y: 0 }); // Relative position
+
+    // Center the window when it opens
+    useEffect(() => {
+        if (isOpen) {
+            const width = 600;
+            const height = 400;
+            const x = (window.innerWidth - width) / 2;
+            const y = (window.innerHeight - height) / 2;
+            setPosition({ 
+                x: Math.max(0, x), 
+                y: Math.max(0, y) 
+            });
+        }
+    }, [isOpen]);
+
+    const onMouseDown = (e: React.MouseEvent) => {
+        if (e.button !== 0) return; // Only left click
+        setIsDragging(true);
+        setRel({
+            x: e.clientX - position.x,
+            y: e.clientY - position.y
+        });
+        e.preventDefault();
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+        if (!isDragging) return;
+        setPosition({
+            x: e.clientX - rel.x,
+            y: e.clientY - rel.y
+        });
+    };
+
+    const onMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    useEffect(() => {
+        if (isDragging) {
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        } else {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+        return () => {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+    }, [isDragging]);
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-[100] pointer-events-none">
+             <div 
+                className="absolute w-[600px] h-[400px] bg-[#c0c0c0] flex flex-col border-t border-l border-[#fff] border-b border-r border-[#000] border-2 shadow-2xl pointer-events-auto"
+                style={{ left: position.x, top: position.y }}
+             >
+                 {/* Title Bar */}
+                 <div 
+                    className="bg-[#000080] text-white px-2 py-[2px] flex justify-between items-center select-none font-bold text-xs cursor-default"
+                    onMouseDown={onMouseDown}
+                 >
+                     <div className="flex items-center gap-1 pointer-events-none">
+                         <img src={ASSETS.NOTEPAD} width="14" height="14" alt="" />
+                         <span>{title} - Notepad</span>
+                     </div>
+                     <button onClick={onClose} className="w-[14px] h-[14px] bg-[#c0c0c0] border border-white border-b-[#404040] border-r-[#404040] flex items-center justify-center text-black leading-3 active:border-t-[#404040] active:border-l-[#404040] active:border-b-white active:border-r-white">×</button>
+                 </div>
+                 {/* Menu Bar */}
+                 <div className="flex text-black text-xs px-1 py-[1px] bg-[#c0c0c0]">
+                     <span className="px-1 underline">F</span>ile
+                     <span className="px-1 underline">E</span>dit
+                     <span className="px-1 underline">S</span>earch
+                     <span className="px-1 underline">H</span>elp
+                 </div>
+                 {/* Content */}
+                 <textarea 
+                    className="flex-1 resize-none bg-white text-black text-xs p-1 outline-none border border-[#808080] border-b-white border-r-white m-[2px] overflow-scroll whitespace-pre scrollbar-classic"
+                    style={{ fontFamily: '"Courier New", Courier, monospace' }}
+                    value={content}
+                    readOnly
+                 />
+             </div>
+        </div>
+    );
+};
+
+// Updated Toolbar Button for Split-Button Behavior
+const ToolbarButton: React.FC<{ 
+    imgSrc: string, 
+    label: string, 
+    disabled?: boolean, 
+    active?: boolean, 
+    onClick?: () => void,
+    hasDropdown?: boolean,
+    onDropdownClick?: (e: React.MouseEvent) => void,
+    dropdownOpen?: boolean
+}> = ({ imgSrc, label, disabled, active, onClick, hasDropdown, onDropdownClick, dropdownOpen }) => {
+    return (
+        <div className="flex flex-row h-[38px] items-stretch shrink-0 font-retro relative group/wrapper px-[1px]">
+            {/* 1. Main Button Area */}
+            <div 
+                onClick={!disabled ? onClick : undefined}
+                className={`
+                    flex flex-col items-center justify-center px-[2px] min-w-[32px]
+                    cursor-default
+                    /* authentic split button behavior: only show border on hover of THIS element */
+                    ${disabled ? 'opacity-50 grayscale' : 'hover:border-t hover:border-l hover:border-white hover:border-b hover:border-r hover:border-[#808080] active:border-[#808080] active:border-l-[#808080] active:border-t-[#808080] active:border-r-white active:border-b-white active:translate-y-[1px]'}
+                    ${!disabled && !active ? 'border border-transparent' : ''}
+                `}
+            >
+                <div className={`flex flex-col items-center justify-center gap-0 pointer-events-none`}>
+                    <ProcessedIcon 
+                        src={imgSrc} 
+                        alt={label}
+                        className="w-[20px] h-[20px] object-contain"
+                    />
+                    <div className="flex items-center mt-[1px]">
+                        <span className="text-[11px] text-black leading-none whitespace-nowrap">{label}</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* 2. Separate Dropdown Arrow Button */}
+            {hasDropdown && (
+                <div 
+                    onClick={!disabled ? onDropdownClick : undefined}
+                    data-dropdown-trigger
+                    className={`
+                        flex items-center justify-center w-[12px] h-full
+                        cursor-default
+                        /* Dropdown active state (stay pressed while menu open) */
+                        ${dropdownOpen ? 'border-2 border-[#808080] border-l-[#808080] border-t-[#808080] border-r-white border-b-white bg-[#d4d0c8] translate-y-[1px]' : ''}
+                        
+                        /* Hover state (only if not open) */
+                        ${!disabled && !dropdownOpen ? 'hover:border-t hover:border-l hover:border-white hover:border-b hover:border-r hover:border-[#808080] active:border-[#808080] active:border-l-[#808080] active:border-t-[#808080] active:border-r-white active:border-b-white active:translate-y-[1px]' : ''}
+                        
+                        /* Default transparent border to reserve space */
+                        ${!dropdownOpen ? 'border border-transparent' : ''}
+                    `}
+                >
+                    <span className={`text-[7px] leading-none mb-2 ${disabled ? 'text-gray-400' : 'text-black'}`}>▼</span>
+                </div>
             )}
         </div>
     );
 };
 
-const MenuString = ({ label, underlineIndex = 0 }: { label: string, underlineIndex?: number }) => (
-    <div className="px-2 py-[2px] hover:bg-[#000080] hover:text-white cursor-default select-none flex h-full items-center font-retro text-[12px] tracking-wide">
+const MenuString: React.FC<{ 
+    label: string, 
+    underlineIndex?: number, 
+    isOpen?: boolean,
+    onClick?: (e: React.MouseEvent) => void 
+}> = ({ label, underlineIndex = 0, isOpen, onClick }) => (
+    <div 
+        onClick={onClick}
+        data-dropdown-trigger
+        className={`
+            px-2 py-[2px] cursor-default select-none flex h-full items-center font-retro text-[12px] tracking-wide relative
+            ${isOpen ? 'bg-[#000080] text-white shadow-none' : 'hover:bg-[#000080] hover:text-white text-black'}
+        `}
+    >
         <span>
             {label.split('').map((char, i) => (
                 <span key={i} className={i === underlineIndex ? 'underline' : ''}>{char}</span>
             ))}
         </span>
     </div>
-);
-
-const PngIcon = ({ src }: { src: string }) => (
-    <img src={src} className="w-[24px] h-[24px] object-contain" alt="icon" />
 );
 
 // --- Shadow DOM Scope Component ---
@@ -165,7 +425,6 @@ const Shadow98: React.FC<{ children: React.ReactNode, className?: string }> = ({
       {root && createPortal(
         <>
           <link rel="stylesheet" href="https://unpkg.com/98.css" />
-          {/* Inject fonts directly into Shadow DOM to ensure title bar picks it up */}
           <style>{`
             @font-face {
               font-family: "Pixelated MS Sans Serif";
@@ -225,12 +484,93 @@ const Shadow98: React.FC<{ children: React.ReactNode, className?: string }> = ({
 export const IEFrame: React.FC<{ 
     url: string, 
     children: React.ReactNode,
-    onGoHome?: () => void 
-}> = ({ url, children, onGoHome }) => {
+    onGoHome?: () => void,
+    onVisitBathhouse?: () => void,
+    currentSourceCode?: string
+}> = ({ url, children, onGoHome, onVisitBathhouse, currentSourceCode }) => {
+    
+  const frameRef = useRef<HTMLDivElement>(null);
+
+  // --- States for Dropdowns ---
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
+
+  const [activeToolbarDropdown, setActiveToolbarDropdown] = useState<string | null>(null);
+  const [toolbarDropdownPos, setToolbarDropdownPos] = useState({ top: 0, left: 0 });
+
+  // --- Right Click Context Menu State ---
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [contextMenuPos, setContextMenuPos] = useState({ top: 0, left: 0 });
+
+  // --- Notepad State ---
+  const [notepadOpen, setNotepadOpen] = useState(false);
+
+  // --- Handlers ---
+  
+  const handleMenuClick = (e: React.MouseEvent, menuName: string) => {
+      e.stopPropagation();
+      setContextMenuOpen(false);
+      const target = e.currentTarget as HTMLElement;
+      
+      // Calculate position relative to viewport for fixed positioning
+      const itemRect = target.getBoundingClientRect();
+
+      if (activeMenu === menuName) {
+          setActiveMenu(null);
+      } else {
+          setActiveMenu(menuName);
+          // Position fixed
+          setMenuPos({ 
+              top: itemRect.bottom, 
+              left: itemRect.left 
+          });
+      }
+      setActiveToolbarDropdown(null);
+  };
+
+  const handleToolbarDropdownClick = (e: React.MouseEvent, name: string) => {
+      e.stopPropagation();
+      setContextMenuOpen(false);
+      const target = e.currentTarget as HTMLElement; // The arrow div
+      const itemRect = target.getBoundingClientRect();
+      
+      if (activeToolbarDropdown === name) {
+          setActiveToolbarDropdown(null);
+      } else {
+          setActiveToolbarDropdown(name);
+          // Position fixed
+          setToolbarDropdownPos({ 
+              top: itemRect.bottom, 
+              left: itemRect.left 
+          });
+      }
+      setActiveMenu(null);
+  };
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+      e.preventDefault();
+      closeAllMenus();
+      setContextMenuPos({ top: e.clientY, left: e.clientX });
+      setContextMenuOpen(true);
+  };
+
+  const closeAllMenus = () => {
+      setActiveMenu(null);
+      setActiveToolbarDropdown(null);
+      setContextMenuOpen(false);
+  };
+  
+  const handleViewSource = () => {
+      setContextMenuOpen(false);
+      if (currentSourceCode) {
+          setNotepadOpen(true);
+      }
+  };
+
+  const canViewSource = !!currentSourceCode;
+
   return (
     <>
-      {/* Global Font Face Injection for Pixelated MS Sans Serif */}
-      {/* USING THE CORRECT 98.css URLS NOW */}
       <style>{`
         @font-face {
           font-family: "Pixelated MS Sans Serif";
@@ -245,7 +585,6 @@ export const IEFrame: React.FC<{
           font-style: normal;
         }
         
-        /* Custom Retro Font Class */
         .font-retro, .ie-window-frame {
              font-family: "Pixelated MS Sans Serif", "SimSun", "宋体", sans-serif;
              -webkit-font-smoothing: none;
@@ -253,16 +592,29 @@ export const IEFrame: React.FC<{
              image-rendering: pixelated;
         }
         
-        /* Apply to inputs/buttons as they don't inherit by default sometimes */
+        .text-shadow-white {
+            text-shadow: 1px 1px 0 #fff;
+        }
+        
         input, button, select, textarea {
              font-family: "Pixelated MS Sans Serif", "SimSun", "宋体", sans-serif !important;
              -webkit-font-smoothing: none;
         }
       `}</style>
       
-      <div className="ie-window-frame h-screen w-screen flex flex-col font-retro overflow-hidden select-none p-0 bg-[#d4d0c8] text-black">
+      <div 
+        ref={frameRef}
+        className="ie-window-frame h-screen w-screen flex flex-col font-retro overflow-hidden select-none p-0 bg-[#d4d0c8] text-black relative"
+        style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', backgroundColor: '#d4d0c8', color: 'black', position: 'relative' }}
+        onClick={closeAllMenus}
+        onContextMenu={(e) => {
+             // If clicking on chrome (toolbars), default behavior or block. 
+             // We only want context menu on the content area, which is handled below.
+             e.preventDefault(); 
+        }}
+      >
         
-        {/* 1. Title Bar (ISOLATED via Shadow DOM) */}
+        {/* 1. Title Bar */}
         <Shadow98 className="shrink-0 h-[19px] m-[2px] mb-[0px]">
           <div className="title-bar">
             <div className="title-bar-text">
@@ -278,50 +630,72 @@ export const IEFrame: React.FC<{
         </Shadow98>
 
         {/* 2. Menu Bar */}
-        <div className="h-[20px] bg-[#d4d0c8] border-b border-white flex items-center px-1 text-black shrink-0 shadow-[0_-1px_0_#808080_inset] relative z-20 font-retro">
+        <div 
+            className="h-[20px] bg-[#d4d0c8] border-b border-white flex items-center px-1 text-black shrink-0 shadow-[0_-1px_0_#808080_inset] relative z-20 font-retro"
+            style={{ display: 'flex', alignItems: 'center', height: '20px', backgroundColor: '#d4d0c8' }}
+        >
           <ToolbarHandle />
-          <MenuString label="File" underlineIndex={0} />
-          <MenuString label="Edit" underlineIndex={0} />
-          <MenuString label="View" underlineIndex={0} />
-          <MenuString label="Favorites" underlineIndex={1} />
-          <MenuString label="Tools" underlineIndex={0} />
-          <MenuString label="Help" underlineIndex={0} />
+          <div className="relative h-full flex items-center">
+              <MenuString label="File" underlineIndex={0} onClick={(e) => handleMenuClick(e, 'File')} isOpen={activeMenu === 'File'} />
+              <MenuString label="Edit" underlineIndex={0} onClick={(e) => handleMenuClick(e, 'Edit')} isOpen={activeMenu === 'Edit'} />
+              <MenuString label="View" underlineIndex={0} onClick={(e) => handleMenuClick(e, 'View')} isOpen={activeMenu === 'View'} />
+              <MenuString label="Favorites" underlineIndex={1} onClick={(e) => handleMenuClick(e, 'Favorites')} isOpen={activeMenu === 'Favorites'} />
+              <MenuString label="Tools" underlineIndex={0} />
+              <MenuString label="Help" underlineIndex={0} />
+          </div>
           
-          <div className="ml-auto">
+          <div className="ml-auto" style={{ marginLeft: 'auto' }}>
               <img src={ASSETS.WINDOWS} width="22" height="22" alt="Windows" className="block" />
           </div>
         </div>
 
         {/* 3. Standard Buttons Toolbar */}
-        <div className="bg-[#d4d0c8] border-b border-[#808080] shadow-[0_1px_0_#fff] flex items-center p-[2px] shrink-0 h-[40px] relative z-10 font-retro">
+        <div 
+            className="bg-[#d4d0c8] border-b border-[#808080] shadow-[0_1px_0_#fff] flex items-center p-[2px] shrink-0 h-[44px] relative z-10 font-retro overflow-x-auto scrollbar-none"
+            style={{ display: 'flex', alignItems: 'center', height: '44px', backgroundColor: '#d4d0c8', overflowX: 'auto' }}
+        >
           <ToolbarHandle />
-          <ToolbarButton icon={<VectorIcons.Back />} label="Back" onClick={() => window.history.back()} />
-          <ToolbarButton icon={<VectorIcons.Forward disabled />} label="Forward" disabled />
           
-          <ToolbarButton icon={<PngIcon src={ASSETS.STOP} />} label="Stop" />
+          {/* Navigation Group */}
+          <ToolbarButton 
+            imgSrc={TOOLBAR_ICONS.Back} 
+            label="Back" 
+            onClick={() => window.history.back()} 
+            hasDropdown 
+            dropdownOpen={activeToolbarDropdown === 'Back'}
+            onDropdownClick={(e) => handleToolbarDropdownClick(e, 'Back')}
+          />
+          <ToolbarButton 
+            imgSrc={TOOLBAR_ICONS.Forward} 
+            label="Forward" 
+            disabled 
+            hasDropdown
+            dropdownOpen={activeToolbarDropdown === 'Forward'}
+            onDropdownClick={(e) => handleToolbarDropdownClick(e, 'Forward')}
+          />
           
-          <ToolbarButton icon={<VectorIcons.Refresh />} label="Refresh" onClick={() => window.location.reload()} />
-          <ToolbarButton icon={<VectorIcons.Home />} label="Home" onClick={onGoHome} />
+          <ToolbarButton imgSrc={TOOLBAR_ICONS.Stop} label="Stop" />
+          <ToolbarButton imgSrc={TOOLBAR_ICONS.Refresh} label="Refresh" onClick={() => window.location.reload()} />
+          <ToolbarButton imgSrc={TOOLBAR_ICONS.Home} label="Home" onClick={onGoHome} />
           
           <ToolbarSeparator />
           
-          <ToolbarButton icon={<PngIcon src={ASSETS.SEARCH} />} label="Search" />
-          
-          <ToolbarButton icon={<VectorIcons.Favorites />} label="Favorites" />
-          <ToolbarButton icon={<VectorIcons.History />} label="History" />
-          
-          <ToolbarSeparator />
-          
-          <ToolbarButton icon={<VectorIcons.Mail />} label="Mail" />
-          <ToolbarButton icon={<VectorIcons.Print />} label="Print" />
+          {/* Explorer Bar Group */}
+          <ToolbarButton imgSrc={TOOLBAR_ICONS.Search} label="Search" />
+          <ToolbarButton imgSrc={TOOLBAR_ICONS.Favorites} label="Favorites" />
+          <ToolbarButton imgSrc={TOOLBAR_ICONS.History} label="History" />
+
         </div>
 
         {/* 4. Address Bar */}
-        <div className="bg-[#d4d0c8] border-b border-[#808080] shadow-[0_1px_0_#fff] flex items-center p-[3px] gap-2 shrink-0 h-[24px] relative z-10 font-retro">
+        <div 
+            className="bg-[#d4d0c8] border-b border-[#808080] shadow-[0_1px_0_#fff] flex items-center p-[3px] gap-2 shrink-0 h-[26px] relative z-10 font-retro"
+            style={{ display: 'flex', alignItems: 'center', height: '26px', backgroundColor: '#d4d0c8' }}
+        >
           <ToolbarHandle />
           <span className="text-[11px] text-[#444] px-1 font-retro">Address</span>
-          <div className="flex-1 h-[20px] bg-white border border-[#7f9db9] shadow-[inset_1px_1px_1px_#ccc] flex items-center relative">
-              <div className="flex items-center justify-center w-[18px] h-[16px] border-r border-[#ccc] bg-[#f7f7f7] mr-1 select-none">
+          <div className="flex-1 h-[20px] bg-white border border-[#7f9db9] shadow-[inset_1px_1px_1px_#ccc] flex items-center relative" style={{ flex: 1, display: 'flex' }}>
+              <div className="flex items-center justify-center w-[18px] h-[16px] border-r border-[#ccc] bg-[#f7f7f7] mr-1 select-none" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <svg width="14" height="14" viewBox="0 0 14 14">
                       <rect x="2" y="1" width="10" height="12" fill="white" stroke="#666" strokeWidth="0.5" />
                       <path d="M7 4 L9 6 M6 8 h2" stroke="#666" />
@@ -329,16 +703,16 @@ export const IEFrame: React.FC<{
                       <text x="7" y="11" fontSize="9" fill="#2D89D6" textAnchor="middle" fontWeight="bold">e</text>
                   </svg>
               </div>
-              <div className="flex-1 text-[11px] text-black font-retro leading-none overflow-hidden whitespace-nowrap pt-[2px]">
+              <div className="flex-1 text-[11px] text-black font-retro leading-none overflow-hidden whitespace-nowrap pt-[2px]" style={{ flex: 1 }}>
                   {url}
               </div>
-              <div className="w-[16px] h-full bg-[#f0f0f0] border-l border-[#ccc] flex items-center justify-center hover:bg-[#e0e0e0]">
+              <div className="w-[16px] h-full bg-[#f0f0f0] border-l border-[#ccc] flex items-center justify-center hover:bg-[#e0e0e0]" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <svg width="12" height="6" viewBox="0 0 12 6"><path d="M0 0 L12 0 L6 6 Z" fill="black" /></svg>
               </div>
           </div>
-          <div className="flex items-center gap-1">
-              <button className="h-[20px] px-2 flex items-center gap-1 bg-[#d4d0c8] border border-white border-b-[#404040] border-r-[#404040] active:border-t-[#404040] active:border-l-[#404040] active:border-b-white active:border-r-white font-retro">
-                  <div className="w-3 h-3 bg-[#008000] rounded-full flex items-center justify-center">
+          <div className="flex items-center gap-1" style={{ display: 'flex', alignItems: 'center' }}>
+              <button className="h-[20px] px-2 flex items-center gap-1 bg-[#d4d0c8] border border-white border-b-[#404040] border-r-[#404040] active:border-t-[#404040] active:border-l-[#404040] active:border-b-white active:border-r-white font-retro" style={{ display: 'flex' }}>
+                  <div className="w-3 h-3 bg-[#008000] rounded-full flex items-center justify-center" style={{ display: 'flex' }}>
                       <svg viewBox="0 0 10 10" width="8" height="8"><path d="M2 5 L5 8 L8 2" fill="none" stroke="white" strokeWidth="1.5"/></svg>
                   </div>
                   <span className="text-[11px]">Go</span>
@@ -348,13 +722,17 @@ export const IEFrame: React.FC<{
         </div>
 
         {/* 5. Main Content Area */}
-        <div className="flex-1 relative overflow-auto bg-[#808080] border-t-2 border-l-2 border-[#404040] border-b border-r border-white scrollbar-classic">
+        <div 
+            className="flex-1 relative overflow-auto bg-[#808080] border-t-2 border-l-2 border-[#404040] border-b border-r border-white scrollbar-classic" 
+            style={{ flex: 1, position: 'relative' }}
+            onContextMenu={handleContextMenu}
+        >
             <div className="w-full min-h-full bg-white relative isolate">
               {children}
             </div>
         </div>
 
-        {/* 6. Status Bar (ISOLATED via Shadow DOM) */}
+        {/* 6. Status Bar */}
         <Shadow98 className="shrink-0 h-[19px] m-[2px] mt-0">
             <div className="status-bar" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                 <div className="status-bar-field" style={{ width: '24px', flexGrow: 0, flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
@@ -375,14 +753,138 @@ export const IEFrame: React.FC<{
                 </div>
             </div>
         </Shadow98>
+
+        {/* === RENDER DROPDOWNS HERE (Top Level, absolute relative to IEFrame) === */}
+        {/* === Prevents masking by overflow:hidden containers === */}
+        
+        {/* Main Menu Dropdowns */}
+        <DropdownContainer 
+            isOpen={activeMenu === 'File'} 
+            position={menuPos} 
+            onClose={() => setActiveMenu(null)}
+        >
+            <MenuItem label="New" shortcut="Ctrl+N" hasSubmenu />
+            <MenuItem label="Open..." shortcut="Ctrl+O" onClick={() => alert('Open Dialog (Mock)')} />
+            <MenuItem label="Edit with Notepad" disabled />
+            <MenuItem label="Save" shortcut="Ctrl+S" />
+            <MenuItem label="Save As..." />
+            <MenuSeparator />
+            <MenuItem label="Page Setup..." />
+            <MenuItem label="Print..." shortcut="Ctrl+P" onClick={() => window.print()} />
+            <MenuSeparator />
+            <MenuItem label="Send" hasSubmenu />
+            <MenuItem label="Import and Export..." />
+            <MenuSeparator />
+            <MenuItem label="Properties" icon={CONTEXT_ICONS.Properties} />
+            <MenuItem label="Work Offline" />
+            <MenuItem label="Close" onClick={() => window.close()} />
+        </DropdownContainer>
+
+            <DropdownContainer 
+            isOpen={activeMenu === 'Edit'} 
+            position={menuPos} 
+            onClose={() => setActiveMenu(null)}
+        >
+            <MenuItem label="Cut" shortcut="Ctrl+X" icon={CONTEXT_ICONS.Cut} disabled />
+            <MenuItem label="Copy" shortcut="Ctrl+C" icon={CONTEXT_ICONS.Copy} />
+            <MenuItem label="Paste" shortcut="Ctrl+V" icon={CONTEXT_ICONS.Paste} />
+            <MenuSeparator />
+            <MenuItem label="Select All" shortcut="Ctrl+A" />
+            <MenuItem label="Find (on This Page)..." shortcut="Ctrl+F" />
+        </DropdownContainer>
+
+            <DropdownContainer 
+            isOpen={activeMenu === 'View'} 
+            position={menuPos} 
+            onClose={() => setActiveMenu(null)}
+        >
+            <MenuItem label="Toolbars" hasSubmenu />
+            <MenuItem label="Status Bar" />
+            <MenuItem label="Explorer Bar" hasSubmenu />
+            <MenuSeparator />
+            <MenuItem label="Go To" hasSubmenu />
+            <MenuItem label="Stop" shortcut="Esc" />
+            <MenuItem label="Refresh" shortcut="F5" onClick={() => window.location.reload()} />
+            <MenuSeparator />
+            <MenuItem label="Text Size" hasSubmenu />
+            <MenuItem label="Encoding" hasSubmenu />
+            <MenuSeparator />
+            <MenuItem label="Source" onClick={handleViewSource} disabled={!canViewSource} />
+            <MenuItem label="Full Screen" shortcut="F11" />
+        </DropdownContainer>
+            
+            <DropdownContainer 
+            isOpen={activeMenu === 'Favorites'} 
+            position={menuPos} 
+            onClose={() => setActiveMenu(null)}
+        >
+            <MenuItem label="Add to Favorites..." />
+            <MenuItem label="Organize Favorites..." />
+            <MenuSeparator />
+            <MenuItem label="Mianyang BBS" />
+            <MenuItem label="Sohu Mall" />
+            <MenuItem label="Legend of Mir" />
+        </DropdownContainer>
+
+        {/* Toolbar Dropdowns */}
+        <DropdownContainer
+            isOpen={activeToolbarDropdown === 'Back' || activeToolbarDropdown === 'Forward'}
+            position={toolbarDropdownPos}
+            onClose={() => setActiveToolbarDropdown(null)}
+        >
+            <div className="bg-[#d4d0c8] text-[10px] p-1 text-[#404040] select-none cursor-default">
+                Select a page to go back to:
+            </div>
+            <MenuItem label="Mianyang BBS - Home" onClick={() => onGoHome && onGoHome()} />
+            <MenuItem label="Welcome to Sohu.com" />
+            <MenuItem label="Legend of Mir - Server Select" />
+            <MenuItem label="about:blank" />
+            <div className="border-t border-[#808080] my-[1px]"></div>
+            <MenuItem label="碧海蓝天休闲会所 - 首页" onClick={() => onVisitBathhouse && onVisitBathhouse()} />
+        </DropdownContainer>
+        
+        {/* Context Menu (Right Click) */}
+        <DropdownContainer
+            isOpen={contextMenuOpen}
+            position={contextMenuPos}
+            onClose={() => setContextMenuOpen(false)}
+        >
+             <MenuItem label="Back" disabled icon={CONTEXT_ICONS.Back} />
+             <MenuItem label="Forward" disabled icon={CONTEXT_ICONS.Forward} />
+             <MenuSeparator />
+             <MenuItem label="Save Background As..." />
+             <MenuItem label="Set as Wallpaper" />
+             <MenuItem label="Copy Background" />
+             <MenuSeparator />
+             <MenuItem label="Select All" />
+             <MenuItem label="Paste" icon={CONTEXT_ICONS.Paste} disabled />
+             <MenuSeparator />
+             <MenuItem label="Create Shortcut" />
+             <MenuItem label="Add to Favorites..." />
+             <MenuItem label="View Source" onClick={handleViewSource} disabled={!canViewSource} />
+             <MenuSeparator />
+             <MenuItem label="Encoding" hasSubmenu />
+             <MenuItem label="Print" />
+             <MenuSeparator />
+             <MenuItem label="Properties" icon={CONTEXT_ICONS.Properties} />
+        </DropdownContainer>
+
+        {/* Notepad (View Source) Modal */}
+        <Notepad 
+            isOpen={notepadOpen} 
+            onClose={() => setNotepadOpen(false)}
+            title="Original Source"
+            content={currentSourceCode || "<html><body><p>Source not available.</p></body></html>"}
+        />
         
         {/* Styles: Manual window border and Scrollbar */}
         <style>{`
           .ie-window-frame {
-              /* Manual replication of 'window' class border to avoid global pollution */
               box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff;
           }
-          
+          .scrollbar-none::-webkit-scrollbar {
+              display: none; 
+          }
           .scrollbar-classic::-webkit-scrollbar {
               width: 16px;
               height: 16px;

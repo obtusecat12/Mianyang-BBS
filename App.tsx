@@ -12,7 +12,9 @@ import { DigestView } from './components/DigestView';
 import { TradeView } from './components/TradeView';
 import { PersonalView } from './components/PersonalView';
 import { ThreadDetail } from './components/threads/ThreadDetail';
+import { ComputerTrainingView } from './components/ComputerTrainingView';
 import { CRTMonitorOverlay } from './components/CRTMonitorOverlay';
+import { BathhouseView } from './components/BathhouseView';
 
 // --- Retro Filters Component ---
 const RetroFilters = () => (
@@ -376,7 +378,7 @@ const Footer = ({ visitCount }: { visitCount: number }) => (
     </div>
 );
 
-type ViewState = 'home' | 'board' | 'thread' | 'game' | 'shop' | 'chat' | 'service' | 'digest' | 'trade' | 'personal';
+type ViewState = 'home' | 'board' | 'thread' | 'game' | 'shop' | 'chat' | 'service' | 'digest' | 'trade' | 'personal' | 'training' | 'bathhouse';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -391,6 +393,8 @@ export default function App() {
       case 'shop': return 'http://store.sohu.com/';
       case 'game': return 'http://www.mir2.com.cn/index.htm';
       case 'chat': return 'http://chat.mianyangbbs.cn/room.asp?id=love';
+      case 'training': return 'http://www.yanghong-edu.cn/';
+      case 'bathhouse': return 'http://www.blueseabath.com/index.htm';
       case 'board': return `http://${SITE_URL}/board.asp?id=${activeBoard?.id || 'unknown'}`;
       case 'thread': return `http://${SITE_URL}/view.asp?id=${activeThreadId || 'unknown'}`;
       case 'service': return `http://${SITE_URL}/service.asp`;
@@ -427,6 +431,8 @@ export default function App() {
   const enterGame = () => setCurrentView('game');
   const enterShop = () => setCurrentView('shop');
   const enterChat = () => setCurrentView('chat');
+  const enterTraining = () => setCurrentView('training');
+  const enterBathhouse = () => setCurrentView('bathhouse');
   const exitGameOrShop = () => setCurrentView('home');
   const handleNavNavigate = (view: ViewState) => {
     if (view === 'home') {
@@ -436,10 +442,220 @@ export default function App() {
     }
   };
 
+  // --- Fake Source Code Generator ---
+  const getFakeSourceCode = () => {
+      // 1. Thread View - Specifically the Mir Private Server one
+      if (currentView === 'thread' && activeThreadId === 'mir-priv-server') {
+          return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- 
+     Powered by DVBBS 2.0 
+     Copyright (C) 2000 Mianyang BBS Inc.
+-->
+<HTML>
+<HEAD>
+<TITLE>【独家】1.76复古传奇私服，麻痹戒指遍地爆！内附登陆器下载 - 沔阳论坛网</TITLE>
+<META http-equiv="Content-Type" content="text/html; charset=gb2312">
+<LINK href="style.css" rel="stylesheet" type="text/css">
+<STYLE>
+body { font-family: 宋体; font-size: 12px; }
+td { font-size: 12px; }
+</STYLE>
+</HEAD>
+<BODY bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080">
+
+<TABLE width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
+  <TR bgcolor="#4A7CC7">
+    <TD><FONT color="#FFFFFF"><B>主题：1.76复古传奇私服</B></FONT></TD>
+  </TR>
+  <TR bgcolor="#EFEFEF">
+    <TD>
+       <!-- Post Content -->
+       还在为官方服务器练级慢而烦恼吗？<BR>
+       来《千禧传奇》吧！上线送VIP3，双倍经验，爆率全开！<BR>
+       <BR>
+       <UL>
+          <LI>1.76复古版本</LI>
+          <LI>新增地图：火龙洞穴</LI>
+       </UL>
+       <BR>
+       登陆器下载地址：<BR>
+       
+       <!-- 
+          HIDDEN CONTENT START 
+          (Client-side protection script v1.0)
+       -->
+       
+       <!-- 
+          ADMIN DOWNLOAD LINK (DO NOT SHARE):
+          <A HREF="http://www.mir2.com.cn/download/mir_login_bypass_admin.exe" TARGET="_blank">Click Here To Download Login Tool</A>
+       -->
+       
+       <DIV style="border:1px dotted red; background:#FFFFE0; padding:10px;">
+          [ 对不起，该附件设置了隐藏 ]<BR>
+          如果您要查看本帖隐藏内容请回复或购买VIP会员
+       </DIV>
+       
+       <!-- HIDDEN CONTENT END -->
+
+    </TD>
+  </TR>
+</TABLE>
+
+</BODY>
+</HTML>`;
+      }
+
+      // 2. Thread View - Generic
+      if (currentView === 'thread') {
+          return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>View Thread - Mianyang BBS</TITLE>
+</HEAD>
+<BODY>
+<!-- Loading content from database... -->
+<TABLE width="100%" border="0">
+<TR><TD>Author: ...</TD><TD>Content: ...</TD></TR>
+</TABLE>
+</BODY>
+</HTML>`;
+      }
+
+      // 3. Home View - Full Source
+      if (currentView === 'home') {
+          return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>沔阳论坛网 - Mianyang BBS 2000 - 网友之家</TITLE>
+<META http-equiv="Content-Type" content="text/html; charset=gb2312">
+<META name="keywords" content="BBS, 论坛, 沔阳, 仙桃, 聊天室, 交友, OICQ">
+<STYLE type="text/css">
+<!--
+body,td,th { font-size: 9pt; font-family: 宋体; }
+a:link { color: #000080; text-decoration: none; }
+a:visited { color: #000080; text-decoration: none; }
+a:hover { color: #FF0000; text-decoration: underline; }
+.bevel { border: 2px outset #ffffff; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgcolor="#555555" leftmargin="0" topmargin="0">
+
+<!-- MAIN CONTAINER -->
+<TABLE width="760" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#CCCCCC" style="border:1px solid white;">
+  <TR>
+    <TD valign="top">
+      
+      <!-- HEADER -->
+      <TABLE width="100%" border="0" cellspacing="0" cellpadding="5">
+         <TR>
+            <TD><FONT size="5" face="Times New Roman" color="#000080"><B><I>${SITE_NAME}</I></B></FONT></TD>
+            <TD align="right">
+               <A href="#" onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://${SITE_URL}');">[设为首页]</A> | 
+               <A href="#" onclick="window.external.AddFavorite(location.href, document.title);">[加入收藏]</A>
+            </TD>
+         </TR>
+      </TABLE>
+      
+      <!-- BANNER AD -->
+      <DIV align="center"><IMG src="ad_banner.gif" width="468" height="60" border="1"></DIV>
+      
+      <!-- MARQUEE -->
+      <MARQUEE scrollamount="3" scrolldelay="100" bgcolor="#000080">
+         <FONT color="#FFFF00">[公告] 系统将于本周五凌晨进行升级维护，请各位网友注意保存文章。</FONT>
+      </MARQUEE>
+
+      <!-- NAVIGATION -->
+      <TABLE width="100%" border="0" cellspacing="1" cellpadding="2" bgcolor="#FFFFFF">
+        <TR bgcolor="#DFDFDF">
+           <TD align="center"><A HREF="/">首页</A></TD>
+           <TD align="center"><A HREF="/service.asp">社区服务</A></TD>
+           <TD align="center"><A HREF="/digest.asp">精华区</A></TD>
+           <TD align="center"><A HREF="/trade.asp">同城交易</A></TD>
+        </TR>
+      </TABLE>
+
+      <!-- MAIN CONTENT TABLE -->
+      <TABLE width="100%" border="0" cellspacing="5" cellpadding="0">
+        <TR>
+           <!-- LEFT COLUMN -->
+           <TD width="100%" valign="top">
+              
+              <!-- RECOMMENDATION -->
+              <TABLE width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#800000">
+                 <TR bgcolor="#FFF5E6">
+                    <TD><FONT color="red"><B>[推荐]</B> 祝贺我市被评为全国文明城市！</FONT></TD>
+                 </TR>
+              </TABLE>
+              <BR>
+
+              <!-- BOARD LIST -->
+              <TABLE width="100%" border="0" cellspacing="1" cellpadding="2" bgcolor="#808080">
+                 <TR bgcolor="#5086B9"><TD colspan="4"><FONT color="#FFFFFF"><B>:: 分类讨论区 ::</B></FONT></TD></TR>
+                 <TR bgcolor="#DFDFDF" align="center">
+                    <TD>状态</TD><TD>版块名称</TD><TD>文章</TD><TD>版主</TD>
+                 </TR>
+                 <!--
+                    ASP Loop: GetBoards()
+                 -->
+                 ${BOARDS.map(b => `
+                 <TR bgcolor="#F7F7F7">
+                    <TD align="center"><IMG src="folder.gif"></TD>
+                    <TD><B><A HREF="board.asp?id=${b.id}">${b.title}</A></B><BR>${b.description}</TD>
+                    <TD align="center">${b.postCount}</TD>
+                    <TD align="center">${b.moderators.join(',')}</TD>
+                 </TR>`).join('')}
+              </TABLE>
+              
+              <BR>
+              
+              <!-- THREAD LIST -->
+              <TABLE width="100%" border="0" cellspacing="1" cellpadding="2" bgcolor="#808080">
+                 <TR bgcolor="#5086B9"><TD colspan="6"><FONT color="#FFFFFF"><B>:: 最新话题 ::</B></FONT></TD></TR>
+                 <!-- Threads... -->
+              </TABLE>
+
+           </TD>
+           
+           <!-- RIGHT COLUMN (SIDEBAR) -->
+           <TD width="180" valign="top">
+              <TABLE width="100%" border="1" cellspacing="0" cellpadding="2" bordercolor="#FFFFFF" bgcolor="#C0C0C0">
+                 <TR bgcolor="#000080"><TD><FONT color="#FFFFFF"><B>用户登录</B></FONT></TD></TR>
+                 <TR><TD>
+                    ID: <INPUT type="text" size="10"><BR>
+                    PW: <INPUT type="password" size="10"><BR>
+                    <INPUT type="submit" value="登录">
+                 </TD></TR>
+              </TABLE>
+           </TD>
+        </TR>
+      </TABLE>
+      
+      <!-- FOOTER -->
+      <DIV align="center">
+         <HR size="1" color="#808080">
+         Copyright &copy; 2000 Mianyang BBS. All Rights Reserved.<BR>
+         Supported by <B>Microsoft IIS 4.0</B> & <B>Active Server Pages</B>
+      </DIV>
+
+    </TD>
+  </TR>
+</TABLE>
+
+</BODY>
+</HTML>`;
+      }
+
+      // Default
+      return null;
+  };
+
   const renderContent = () => {
     if (currentView === 'game') return <LegendOfMirLogin onExit={exitGameOrShop} />;
     if (currentView === 'shop') return <SohuMall onExit={exitGameOrShop} />;
     if (currentView === 'chat') return <LoveChatRoom onExit={exitGameOrShop} />;
+    if (currentView === 'training') return <ComputerTrainingView onExit={exitGameOrShop} />;
+    if (currentView === 'bathhouse') return <BathhouseView onExit={exitGameOrShop} />;
 
     // Wrap the BBS content in a div that simulates the "Body" of the webpage 
     // to apply the background image and color correctly within the IEFrame.
@@ -488,13 +704,13 @@ export default function App() {
                         </div>
                         <div className="flex items-center gap-1">
                           <PixelIcon type="speaker" />
-                          <b className="text-blue-800">[广告]</b> <span className="underline cursor-pointer hover:text-red-600">极速网吧新开业，会员充100送50！</span>
+                          <b className="text-blue-800">[广告]</b> <span className="underline cursor-pointer hover:text-red-600" onClick={enterTraining}>极速网吧新开业，会员充100送50！</span>
                         </div>
                     </div>
                     
                     {/* Mid-page Ad */}
                     <div className="mb-2">
-                      <RetroAd type="banner" variant={2} />
+                      <RetroAd type="banner" variant={2} onClick={enterTraining} />
                     </div>
 
                     <BoardList handleBoardClick={handleBoardClick} />
@@ -547,7 +763,12 @@ export default function App() {
   return (
     <>
       <CRTMonitorOverlay />
-      <IEFrame url={getVirtualUrl()} onGoHome={goHome}>
+      <IEFrame 
+          url={getVirtualUrl()} 
+          onGoHome={goHome} 
+          onVisitBathhouse={enterBathhouse}
+          currentSourceCode={getFakeSourceCode() || undefined}
+      >
         {renderContent()}
       </IEFrame>
     </>

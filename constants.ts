@@ -49,6 +49,17 @@ export const BOARDS: Board[] = [
 
 export const MOCK_THREADS: Thread[] = [
   {
+    id: "mir-priv-server",
+    boardId: "internet-tech",
+    title: "【独家】1.76复古传奇私服，麻痹戒指遍地爆！内附登陆器下载",
+    author: "沙巴克城主",
+    date: "2000-05-21 11:30",
+    views: 9999,
+    replies: 88,
+    isHot: true,
+    isNew: true
+  },
+  {
     id: "t1",
     boardId: "city-chat",
     title: "听说沃尔玛要来我们仙桃了？真的假的？",

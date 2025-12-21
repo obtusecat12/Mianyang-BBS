@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 // A retro container simulating a table cell or windows frame
@@ -319,7 +320,10 @@ export const RetroAd: React.FC<AdProps> = ({ type, variant, onClick, onChatEnter
     }
     // Computer Training Ad - Updated with user image
     return (
-       <div className={`w-full h-[160px] bg-[#001030] ${borderStyle} flex items-center justify-between px-4 cursor-pointer overflow-hidden relative group`}>
+       <div 
+         onClick={onClick}
+         className={`w-full h-[160px] bg-[#001030] ${borderStyle} flex items-center justify-between px-4 cursor-pointer overflow-hidden relative group`}
+       >
           {/* Background Image - Scaled using object-cover to handle 1278x527 source */}
           <img 
              src="https://i.ibb.co/zHrDS3LB/3.png" 

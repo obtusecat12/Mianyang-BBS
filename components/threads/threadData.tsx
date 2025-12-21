@@ -34,6 +34,55 @@ const mockUser = (name: string, rank: string, posts: number, sig?: string, avata
 };
 
 export const THREAD_CONTENT_MAP: Record<string, ThreadPost[]> = {
+  // --- NEW: Mir Private Server Thread ---
+  "mir-priv-server": [
+    {
+      id: 1,
+      floor: 1,
+      author: mockUser("沙巴克城主", "至尊VIP", 9999, "屠龙宝刀，点击就送", 'human'),
+      date: "2000-05-21 11:30:00",
+      content: (
+        <div>
+           <p className="font-bold text-red-600 text-lg">【重磅推荐】2000年最火爆的传奇私服——《千禧传奇》震撼公测！</p>
+           <br/>
+           <p>还在为官方服务器练级慢而烦恼吗？还在为打不到装备而被RMB玩家欺负吗？</p>
+           <p>来《千禧传奇》吧！上线送VIP3，双倍经验，爆率全开！</p>
+           <p>服务器位于湖北电信骨干机房，千兆光纤，绝对不卡！</p>
+           <br/>
+           <ul className="list-disc pl-5">
+              <li>1.76复古版本，原汁原味</li>
+              <li>新增地图：火龙洞穴、蚂蚁洞</li>
+              <li>新人上线送裁决之杖、天魔神甲</li>
+           </ul>
+           <br/>
+           <p>登陆器下载地址：</p>
+           <div className="border border-dotted border-red-500 bg-yellow-100 p-4 text-center my-2">
+               <div className="text-red-600 font-bold mb-1">
+                   [ 对不起，该附件设置了隐藏 ]
+               </div>
+               <div className="text-xs text-gray-500">
+                   如果您要查看本帖隐藏内容请 <span className="text-blue-800 underline cursor-pointer">回复</span> 或 <span className="text-blue-800 underline cursor-pointer">购买VIP会员</span>
+               </div>
+           </div>
+           <p className="text-gray-400 text-xs mt-4">（版主提示：请大家注意账号安全，不要在私服使用和官服一样的账号密码）</p>
+        </div>
+      )
+    },
+    {
+      id: 2,
+      floor: 2,
+      author: mockUser("砍人王", "高级会员", 332, "杀人不红名", 'pixel'),
+      date: "2000-05-21 11:35:00",
+      content: <div>楼主好人！回复看看地址。dddddddddddddddd</div>
+    },
+    {
+      id: 3,
+      floor: 3,
+      author: mockUser("道士带狗", "中级会员", 150, undefined, 'cat'),
+      date: "2000-05-21 11:40:00",
+      content: <div>真的是双倍经验吗？我去试试。如果有毒我就举报你！</div>
+    }
+  ],
   // --- 1. Walmart Rumor ---
   "t1": [
     {
