@@ -38,7 +38,6 @@ const TOOLBAR_ICONS = {
 function useClickOutside(ref: React.RefObject<HTMLElement>, callback: () => void) {
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            // Check if the click is on a dropdown trigger (to prevent immediate closing when toggling)
             const target = event.target as HTMLElement;
             if (target.closest('[data-dropdown-trigger]')) {
                 return;
@@ -67,7 +66,6 @@ const ToolbarSeparator = () => (
     <div className="h-[36px] w-[2px] border-l border-[#808080] border-r border-white mx-1 my-auto shrink-0"></div>
 );
 
-// Component to remove black background from JPEGs on the fly
 const ProcessedIcon: React.FC<{ src: string, alt: string, className?: string }> = ({ src, alt, className }) => {
     const [imgUrl, setImgUrl] = useState<string>(src);
     
@@ -93,7 +91,6 @@ const ProcessedIcon: React.FC<{ src: string, alt: string, className?: string }> 
                 const width = canvas.width;
                 const height = canvas.height;
                 
-                // Get the top-left pixel color to determine background (usually black 0,0,0)
                 const bgR = data[0];
                 const bgG = data[1];
                 const bgB = data[2];
@@ -121,7 +118,6 @@ const ProcessedIcon: React.FC<{ src: string, alt: string, className?: string }> 
                     }
                 };
                 
-                // Seed flood fill from corners
                 add(0, 0);
                 add(width - 1, 0);
                 add(0, height - 1);
@@ -170,7 +166,6 @@ const MenuItem: React.FC<{
             ${disabled ? 'text-[#808080] text-shadow-white pointer-events-none' : 'text-black hover:bg-[#000080] hover:text-white group'}
         `}
     >
-        {/* Icon / Check area - Fixed width 16px */}
         <div className="w-[16px] mr-2 flex justify-center items-center">
             {icon && (
                 <ProcessedIcon 
@@ -188,7 +183,6 @@ const MenuItem: React.FC<{
     </div>
 );
 
-// Dropdown Container
 const DropdownContainer: React.FC<{ 
     children: React.ReactNode, 
     isOpen: boolean, 
@@ -204,19 +198,18 @@ const DropdownContainer: React.FC<{
     return (
         <div 
             ref={ref}
-            className="fixed bg-[#d4d0c8] py-[1px] min-w-[150px]"
+            className="absolute bg-[#d4d0c8] py-[1px] min-w-[150px]"
             style={{ 
                 top: position.top, 
                 left: position.left, 
                 zIndex: zIndex,
                 display: 'flex',
                 flexDirection: 'column',
-                // Authentic Windows 98 Menu Border
                 borderLeft: '1px solid #fff',
                 borderTop: '1px solid #fff',
                 borderRight: '1px solid #404040',
                 borderBottom: '1px solid #404040',
-                boxShadow: '1px 1px 0 #000', // Hard pixel shadow
+                boxShadow: '1px 1px 0 #000', 
             }}
         >
             <div className="border-t border-l border-[#dfdfdf] border-b border-r border-[#808080]">
@@ -226,7 +219,6 @@ const DropdownContainer: React.FC<{
     );
 };
 
-// Notepad (View Source) Component - Draggable Version
 const Notepad: React.FC<{
     isOpen: boolean;
     onClose: () => void;
@@ -235,9 +227,8 @@ const Notepad: React.FC<{
 }> = ({ isOpen, onClose, content, title }) => {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
-    const [rel, setRel] = useState({ x: 0, y: 0 }); // Relative position
+    const [rel, setRel] = useState({ x: 0, y: 0 }); 
 
-    // Center the window when it opens
     useEffect(() => {
         if (isOpen) {
             const width = 600;
@@ -252,7 +243,7 @@ const Notepad: React.FC<{
     }, [isOpen]);
 
     const onMouseDown = (e: React.MouseEvent) => {
-        if (e.button !== 0) return; // Only left click
+        if (e.button !== 0) return; 
         setIsDragging(true);
         setRel({
             x: e.clientX - position.x,
@@ -295,7 +286,6 @@ const Notepad: React.FC<{
                 className="absolute w-[600px] h-[400px] bg-[#c0c0c0] flex flex-col border-t border-l border-[#fff] border-b border-r border-[#000] border-2 shadow-2xl pointer-events-auto"
                 style={{ left: position.x, top: position.y }}
              >
-                 {/* Title Bar */}
                  <div 
                     className="bg-[#000080] text-white px-2 py-[2px] flex justify-between items-center select-none font-bold text-xs cursor-default"
                     onMouseDown={onMouseDown}
@@ -306,14 +296,12 @@ const Notepad: React.FC<{
                      </div>
                      <button onClick={onClose} className="w-[14px] h-[14px] bg-[#c0c0c0] border border-white border-b-[#404040] border-r-[#404040] flex items-center justify-center text-black leading-3 active:border-t-[#404040] active:border-l-[#404040] active:border-b-white active:border-r-white">×</button>
                  </div>
-                 {/* Menu Bar */}
                  <div className="flex text-black text-xs px-1 py-[1px] bg-[#c0c0c0]">
                      <span className="px-1 underline">F</span>ile
                      <span className="px-1 underline">E</span>dit
                      <span className="px-1 underline">S</span>earch
                      <span className="px-1 underline">H</span>elp
                  </div>
-                 {/* Content */}
                  <textarea 
                     className="flex-1 resize-none bg-white text-black text-xs p-1 outline-none border border-[#808080] border-b-white border-r-white m-[2px] overflow-scroll whitespace-pre scrollbar-classic"
                     style={{ fontFamily: '"Courier New", Courier, monospace' }}
@@ -325,7 +313,6 @@ const Notepad: React.FC<{
     );
 };
 
-// Updated Toolbar Button for Split-Button Behavior
 const ToolbarButton: React.FC<{ 
     imgSrc: string, 
     label: string, 
@@ -338,13 +325,11 @@ const ToolbarButton: React.FC<{
 }> = ({ imgSrc, label, disabled, active, onClick, hasDropdown, onDropdownClick, dropdownOpen }) => {
     return (
         <div className="flex flex-row h-[38px] items-stretch shrink-0 font-retro relative group/wrapper px-[1px]">
-            {/* 1. Main Button Area */}
             <div 
                 onClick={!disabled ? onClick : undefined}
                 className={`
                     flex flex-col items-center justify-center px-[2px] min-w-[32px]
                     cursor-default
-                    /* authentic split button behavior: only show border on hover of THIS element */
                     ${disabled ? 'opacity-50 grayscale' : 'hover:border-t hover:border-l hover:border-white hover:border-b hover:border-r hover:border-[#808080] active:border-[#808080] active:border-l-[#808080] active:border-t-[#808080] active:border-r-white active:border-b-white active:translate-y-[1px]'}
                     ${!disabled && !active ? 'border border-transparent' : ''}
                 `}
@@ -361,7 +346,6 @@ const ToolbarButton: React.FC<{
                 </div>
             </div>
 
-            {/* 2. Separate Dropdown Arrow Button */}
             {hasDropdown && (
                 <div 
                     onClick={!disabled ? onDropdownClick : undefined}
@@ -369,13 +353,8 @@ const ToolbarButton: React.FC<{
                     className={`
                         flex items-center justify-center w-[12px] h-full
                         cursor-default
-                        /* Dropdown active state (stay pressed while menu open) */
                         ${dropdownOpen ? 'border-2 border-[#808080] border-l-[#808080] border-t-[#808080] border-r-white border-b-white bg-[#d4d0c8] translate-y-[1px]' : ''}
-                        
-                        /* Hover state (only if not open) */
                         ${!disabled && !dropdownOpen ? 'hover:border-t hover:border-l hover:border-white hover:border-b hover:border-r hover:border-[#808080] active:border-[#808080] active:border-l-[#808080] active:border-t-[#808080] active:border-r-white active:border-b-white active:translate-y-[1px]' : ''}
-                        
-                        /* Default transparent border to reserve space */
                         ${!dropdownOpen ? 'border border-transparent' : ''}
                     `}
                 >
@@ -408,7 +387,6 @@ const MenuString: React.FC<{
     </div>
 );
 
-// --- Shadow DOM Scope Component ---
 const Shadow98: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
   const node = useRef<HTMLDivElement>(null);
   const [root, setRoot] = useState<ShadowRoot | null>(null);
@@ -462,7 +440,6 @@ const Shadow98: React.FC<{ children: React.ReactNode, className?: string }> = ({
                 display: flex;
                 align-items: center;
                 padding-left: 2px;
-                /* Authentic font stack for Title Bar */
                 font-family: "Pixelated MS Sans Serif", "SimSun", "宋体", sans-serif !important;
             }
             .status-bar {
@@ -478,8 +455,6 @@ const Shadow98: React.FC<{ children: React.ReactNode, className?: string }> = ({
     </div>
   );
 };
-
-// --- Main IEFrame Component ---
 
 export const IEFrame: React.FC<{ 
     url: string, 
@@ -498,32 +473,41 @@ export const IEFrame: React.FC<{
   const [activeToolbarDropdown, setActiveToolbarDropdown] = useState<string | null>(null);
   const [toolbarDropdownPos, setToolbarDropdownPos] = useState({ top: 0, left: 0 });
 
-  // --- Right Click Context Menu State ---
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const [contextMenuPos, setContextMenuPos] = useState({ top: 0, left: 0 });
 
-  // --- Notepad State ---
   const [notepadOpen, setNotepadOpen] = useState(false);
 
-  // --- Handlers ---
-  
+  // Helper to get coordinates relative to the IEFrame container
+  const getRelativeCoords = (target: HTMLElement | { clientX: number, clientY: number }) => {
+      if (!frameRef.current) return { top: 0, left: 0 };
+      const frameRect = frameRef.current.getBoundingClientRect();
+      
+      if ('clientX' in target) {
+          return {
+              top: target.clientY - frameRect.top,
+              left: target.clientX - frameRect.left
+          };
+      } else {
+          const targetRect = target.getBoundingClientRect();
+          return {
+              top: targetRect.bottom - frameRect.top,
+              left: targetRect.left - frameRect.left
+          };
+      }
+  };
+
   const handleMenuClick = (e: React.MouseEvent, menuName: string) => {
       e.stopPropagation();
       setContextMenuOpen(false);
       const target = e.currentTarget as HTMLElement;
       
-      // Calculate position relative to viewport for fixed positioning
-      const itemRect = target.getBoundingClientRect();
-
       if (activeMenu === menuName) {
           setActiveMenu(null);
       } else {
           setActiveMenu(menuName);
-          // Position fixed
-          setMenuPos({ 
-              top: itemRect.bottom, 
-              left: itemRect.left 
-          });
+          const pos = getRelativeCoords(target);
+          setMenuPos(pos);
       }
       setActiveToolbarDropdown(null);
   };
@@ -531,18 +515,14 @@ export const IEFrame: React.FC<{
   const handleToolbarDropdownClick = (e: React.MouseEvent, name: string) => {
       e.stopPropagation();
       setContextMenuOpen(false);
-      const target = e.currentTarget as HTMLElement; // The arrow div
-      const itemRect = target.getBoundingClientRect();
+      const target = e.currentTarget as HTMLElement; 
       
       if (activeToolbarDropdown === name) {
           setActiveToolbarDropdown(null);
       } else {
           setActiveToolbarDropdown(name);
-          // Position fixed
-          setToolbarDropdownPos({ 
-              top: itemRect.bottom, 
-              left: itemRect.left 
-          });
+          const pos = getRelativeCoords(target);
+          setToolbarDropdownPos(pos);
       }
       setActiveMenu(null);
   };
@@ -550,7 +530,8 @@ export const IEFrame: React.FC<{
   const handleContextMenu = (e: React.MouseEvent) => {
       e.preventDefault();
       closeAllMenus();
-      setContextMenuPos({ top: e.clientY, left: e.clientX });
+      const pos = getRelativeCoords({ clientX: e.clientX, clientY: e.clientY });
+      setContextMenuPos(pos);
       setContextMenuOpen(true);
   };
 
@@ -608,8 +589,6 @@ export const IEFrame: React.FC<{
         style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', backgroundColor: '#d4d0c8', color: 'black', position: 'relative' }}
         onClick={closeAllMenus}
         onContextMenu={(e) => {
-             // If clicking on chrome (toolbars), default behavior or block. 
-             // We only want context menu on the content area, which is handled below.
              e.preventDefault(); 
         }}
       >
@@ -656,7 +635,6 @@ export const IEFrame: React.FC<{
         >
           <ToolbarHandle />
           
-          {/* Navigation Group */}
           <ToolbarButton 
             imgSrc={TOOLBAR_ICONS.Back} 
             label="Back" 
@@ -680,7 +658,6 @@ export const IEFrame: React.FC<{
           
           <ToolbarSeparator />
           
-          {/* Explorer Bar Group */}
           <ToolbarButton imgSrc={TOOLBAR_ICONS.Search} label="Search" />
           <ToolbarButton imgSrc={TOOLBAR_ICONS.Favorites} label="Favorites" />
           <ToolbarButton imgSrc={TOOLBAR_ICONS.History} label="History" />
@@ -754,10 +731,7 @@ export const IEFrame: React.FC<{
             </div>
         </Shadow98>
 
-        {/* === RENDER DROPDOWNS HERE (Top Level, absolute relative to IEFrame) === */}
-        {/* === Prevents masking by overflow:hidden containers === */}
-        
-        {/* Main Menu Dropdowns */}
+        {/* Dropdowns are now absolute relative to this container */}
         <DropdownContainer 
             isOpen={activeMenu === 'File'} 
             position={menuPos} 
@@ -780,7 +754,7 @@ export const IEFrame: React.FC<{
             <MenuItem label="Close" onClick={() => window.close()} />
         </DropdownContainer>
 
-            <DropdownContainer 
+        <DropdownContainer 
             isOpen={activeMenu === 'Edit'} 
             position={menuPos} 
             onClose={() => setActiveMenu(null)}
@@ -793,7 +767,7 @@ export const IEFrame: React.FC<{
             <MenuItem label="Find (on This Page)..." shortcut="Ctrl+F" />
         </DropdownContainer>
 
-            <DropdownContainer 
+        <DropdownContainer 
             isOpen={activeMenu === 'View'} 
             position={menuPos} 
             onClose={() => setActiveMenu(null)}
@@ -813,7 +787,7 @@ export const IEFrame: React.FC<{
             <MenuItem label="Full Screen" shortcut="F11" />
         </DropdownContainer>
             
-            <DropdownContainer 
+        <DropdownContainer 
             isOpen={activeMenu === 'Favorites'} 
             position={menuPos} 
             onClose={() => setActiveMenu(null)}
@@ -826,7 +800,6 @@ export const IEFrame: React.FC<{
             <MenuItem label="Legend of Mir" />
         </DropdownContainer>
 
-        {/* Toolbar Dropdowns */}
         <DropdownContainer
             isOpen={activeToolbarDropdown === 'Back' || activeToolbarDropdown === 'Forward'}
             position={toolbarDropdownPos}
@@ -843,7 +816,6 @@ export const IEFrame: React.FC<{
             <MenuItem label="碧海蓝天休闲会所 - 首页" onClick={() => onVisitBathhouse && onVisitBathhouse()} />
         </DropdownContainer>
         
-        {/* Context Menu (Right Click) */}
         <DropdownContainer
             isOpen={contextMenuOpen}
             position={contextMenuPos}
@@ -869,7 +841,6 @@ export const IEFrame: React.FC<{
              <MenuItem label="Properties" icon={CONTEXT_ICONS.Properties} />
         </DropdownContainer>
 
-        {/* Notepad (View Source) Modal */}
         <Notepad 
             isOpen={notepadOpen} 
             onClose={() => setNotepadOpen(false)}
@@ -877,7 +848,6 @@ export const IEFrame: React.FC<{
             content={currentSourceCode || "<html><body><p>Source not available.</p></body></html>"}
         />
         
-        {/* Styles: Manual window border and Scrollbar */}
         <style>{`
           .ie-window-frame {
               box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff;
